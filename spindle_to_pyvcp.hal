@@ -1,0 +1,86 @@
+net spindle-rpm => pyvcp.spindle-speed
+net spindle-at-speed => pyvcp.at-speeds
+net coolant-on => pyvcp.coolant-on
+# net DI0 => pyvcp.DI0
+# net DI1 => pyvcp.DI1
+# net DI2 => pyvcp.DI2
+# net DI3 => pyvcp.DI3
+
+# net DO0 <= pyvcp.DO0
+# net DO1 <= pyvcp.DO11
+# net DO2 <= pyvcp.DO2
+# net DO3 <= pyvcp.DO3
+
+net x-max => pyvcp.x-max
+net x-min => pyvcp.x-min
+net z-max => pyvcp.z-max
+net z-min => pyvcp.z-min
+net a-max => pyvcp.a-max
+net a-min => pyvcp.a-min
+net c-max => pyvcp.c-max
+net c-min => pyvcp.c-min
+
+
+net input1_code_u32 conv-float-u32.0.in <= mb2hal.input1_code.00.float
+net input1_code_slice_in bitslice.0.in <= conv-float-u32.0.out
+
+net io1_in_00 or2.0.in1 <= bitslice.0.out-00 => pyvcp.io1_in_00
+# net io1_in_01 or2.1.in1 <= bitslice.0.out-01 => pyvcp.io1_in_01
+# net io1_in_02 or2.2.in1 <= bitslice.0.out-02 => pyvcp.io1_in_02
+net io1_in_03 or2.3.in1 <= bitslice.0.out-03 => pyvcp.io1_in_03
+net io1_in_04 or2.4.in1 <= bitslice.0.out-04 => pyvcp.io1_in_04
+net io1_in_05 or2.5.in1 <= bitslice.0.out-05 => pyvcp.io1_in_05
+net io1_in_06 or2.6.in1 <= bitslice.0.out-06 => pyvcp.io1_in_06
+net io1_in_07 or2.7.in1 <= bitslice.0.out-07 => pyvcp.io1_in_07
+
+net IO1_out0_or_in0 pyvcp.IO1_out0 => or2.0.in0
+# net IO1_out1_or_in0 pyvcp.IO1_out1 => or2.1.in0
+# net IO1_out2_or_in0 pyvcp.IO1_out2 => or2.2.in0
+net IO1_out3_or_in0 pyvcp.IO1_out3 => or2.3.in0
+net IO1_out4_or_in0 pyvcp.IO1_out4 => or2.4.in0
+net IO1_out5_or_in0 pyvcp.IO1_out5 => or2.5.in0
+net IO1_out6_or_in0 pyvcp.IO1_out6 => or2.6.in0
+net IO1_out7_or_in0 pyvcp.IO1_out7 => or2.7.in0
+
+net IO1_out0 wsum.0.bit.0.in  <= or2.0.out
+# net IO1_out1 wsum.0.bit.1.in  <= or2.1.out
+# net IO1_out2 wsum.0.bit.2.in  <= or2.2.out
+net IO1_out3 wsum.0.bit.3.in  <= or2.3.out
+net IO1_out4 wsum.0.bit.4.in  <= or2.4.out
+net IO1_out5 wsum.0.bit.5.in  <= or2.5.out
+net IO1_out6 wsum.0.bit.6.in  <= or2.6.out
+net IO1_out7 wsum.0.bit.7.in  <= or2.7.out
+
+
+net IO_relays_float_in conv-s32-float.0.in <= wsum.0.sum
+net IO_relays mb2hal.out1.00 <= conv-s32-float.0.out
+
+# net mist-on iocontrol.0.coolant-mist => lcec.0.DO1.dout-0
+# net coolant-on => iocontrol.0.coolant-flood =>	lcec.0.DO1.dout-1
+
+net Gripper_in pyvcp.DI0 <= lcec.0.DI1.din-0 => or2.8.in0
+net jack_in pyvcp.DI1 <= lcec.0.DI1.din-1 => or2.9.in0
+net Gripper_jack_in pyvcp.DI2 <= lcec.0.DI1.din-2 => or2.10.in0
+net Collant_in pyvcp.DI3 <= lcec.0.DI1.din-3 => or2.11.in0
+
+
+# net DO00 => lcec.0.DO1.dout-0
+# net DO1 => lcec.0.DO1.dout-1
+# net DO2 => lcec.0.DO1.dout-2
+# net DO3 => lcec.0.DO1.dout-3
+
+#gripper
+#M101 for or2.8.in1 true and M102 for or2.8.in1 False
+net DO01_00 lcec.0.DO1.dout-0 <= or2.8.out => pyvcp.gripper_output 
+
+#jack
+#M103 for or2.9.in1 true and M104 for or2.9.in1 False
+net DO01_01 lcec.0.DO1.dout-1 <= or2.9.out => pyvcp.jack_output
+
+#gripper_jack
+#M105 for or2.10.in1 true and M106 for or2.10.in1 False
+net DO01_02 lcec.0.DO1.dout-2 <= or2.10.out => pyvcp.gripper_jack_output
+
+#coolant
+#M106 for or2.10.in1 true and M107 for or2.11.in1 False
+net DO01_03 lcec.0.DO1.dout-3 <= or2.11.out => pyvcp.coolant_output

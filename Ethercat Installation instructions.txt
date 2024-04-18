@@ -1,0 +1,112 @@
+These instructions assume you have master branch installed (currently v2.9) and are using using the official Debian ISO install.
+Instructions to do this are on the buildbot page at http://buildbot.linuxcnc.org/
+It is fairly easy to update the repos in synaptic to point to master and updating there is fairly simple but beyond the scope of this article.
+
+Open terminal in your home directory.
+mkdir dev
+cd dev
+clone all software into this folder to keep your home folder clean.
+
+sudo apt-get update
+sudo apt-get install git mercurial quilt dpkg-dev dkms
+
+git clone https://github.com/LinuxCNC/linuxcnc.git
+git clone https://github.com/sittner/linuxcnc-ethercat.git
+git clone https://github.com/sittner/ec-debianize.git
+
+cd linuxcnc/debian/ 
+./configure uspace 
+cd 
+linuxcnc/ 
+dpkg-checkbuilddeps  (copy the required dep's to clip board)
+sudo apt-get install (alll the required dep's. YOu may need to edit the list to make it valid)
+
+# install the linux-headers for your particular kernel
+sudo apt install linux-headers-$(uname -r)
+
+cd src/ 
+./autogen.sh 
+./configure 
+make -j2 
+sudo make setuid
+
+Add mq extension to mercurial
+sudo geany /etc/mercurial/hgrc
+add these lines:
+[extensions]
+mq =
+save and exit geany
+
+cd ec-debianize 
+./get_source.sh 
+cd etherlabmaster/
+sudo dpkg-buildpackage 
+try this instead to avoid unsigned key errors:
+sudo dpkg-buildpackage -uc -us
+
+If you get an error above check the prompts on the screen about a commit required. Make the commit as it requests:
+sudo dpk-source commit
+
+cd ec-debianize 
+sudo dpkg -i etherlabmaster_ (press tab to autofill)
+sudo dpkg -i etherlabmaster-dev_* (press tab to autofill)
+ 
+If you have cia402 drives such as the popular rtellignet ECT60/ECT86 drives
+git clone https://github.com/dbraun1981/hal-cia402
+cd ./hal-cia402
+sudo halcompile --install cia402.comp
+
+Find your mac address : $ ip link show (output = link/ether ....)
+Kepe it handy during the next step to set up the ethercat config file
+
+sudo thunar
+navigate to /etc/default
+open etc/default/ethercat as root 
+Type in MASTER0_DEVICE="lo:ve:me:te:nd:er" (your mac address)
+Type in DEVICE_MODULES="generic"
+Save and close file
+sudo update-ethercat-config (reboot, or restart your pc)
+If this fails, see notes about dpk-source commit above
+
+cd linuxcnc-ethercat/ 
+For a rip install
+-make clean
+-make
+-make install 
+
+For a installed (deb) version
+-make clean
+-sudo make install 
+You should not need to worry about this but for reference lec_conf gets copied to :
+deb install: /lib/linuxcnc/modules/
+rip install: /linuxcnc-dev/rtlib/
+
+You should be up and running
+use the following command to find slave information to add to your xml example
+ethercat slaves -v
+
+To start linuxcnc with ethercat, start linuxcnc with simple axis gui or start eith the example here.
+
+First check if lcec_conf will load, then open halmeter or halshow.
+When you see the Lcec section, uncheck the # sign's in the postgui.hal file.
+
+if get error on load "permission denied ethrcat0" to gain access
+sudo chmod 666 /dev/EtherCAT0
+To make these permissions permanent
+sudo thunar
+navigate to /etc/udev/rules.d
+geany 99-ethercat.rules (name may be different) and edit:
+GROUP="your_user_name"
+
+If you have a cia402 compatible drive, 
+git clone https://github.com/dbraun1981/hal-cia402
+cd ./hal-cia402
+sudo halcompile --install cia402.comp
+(don't use sudo for a RIP install)
+
+Finally, to get a possibly working ethercat configuration, clone this repository
+run linuxcnc and open a sim. Allow it to be copied to you home directory to create the config folder. Exit Linuxcnc
+cd ~/linuxcnc/configs
+git clone  https://github.com/rodw-au/linuxcnc-cia402
+Open Linuxcnc and select cia402.hal
+Enjoy and tweak to suit your needs.

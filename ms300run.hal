@@ -1,0 +1,14 @@
+loadusr -W vfdmod --debug ms300.ini
+
+net spindle-speed-cmd => vfdmod.spindle.rpm-in
+net spindle-at-speed <= vfdmod.spindle.at-speed
+net spindle-cw => vfdmod.control.run-forward
+net spindle-ccw => vfdmod.control.run-reverse
+
+net pyvcp-fault-reset => vfdmod.control.fault-reset
+
+net spindle-rpm-out <= vfdmod.spindle.rpm-out
+
+net pyvcp-is-connected <= vfdmod.rs485.is-connected
+net pyvcp-error-count <= vfdmod.rs485.error-count
+net pyvcp-last-error <= vfdmod.rs485.last-error

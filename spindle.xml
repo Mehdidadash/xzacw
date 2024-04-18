@@ -1,0 +1,278 @@
+<pyvcp>
+    <label>
+        <text>"Spindle speed:"</text>
+    </label>
+    <bar>
+        <halpin>"spindle-speed"</halpin>
+        <max_>12000</max_>
+    </bar>
+    <label>
+        <text>"at speed:"</text>
+    </label>
+    <led>
+        <halpin>"at-speeds"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    <label>
+        <text>"coolant on"</text>
+    </label>
+    <led>
+        <halpin>"coolant-on"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    <labelframe text="Digital inputs">
+    <font>("Helvetica",16)</font>
+    <hbox>
+    <label>
+        <text>"DI0_Gripper"</text>
+    </label>
+    <led>
+        <halpin>"DI0"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    <label>
+        <text>"DI1_jack"</text>
+    </label>
+    <led>
+        <halpin>"DI1"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    <label>
+        <text>"DI2_grippers_jack"</text>
+    </label>
+    <led>
+        <halpin>"DI2"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    <label>
+        <text>"DI3_coolant"</text>
+    </label>
+    <led>
+        <halpin>"DI3"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    </hbox>
+    </labelframe>
+
+    <labelframe text="X Limits">
+    <font>("Helvetica",16)</font>
+    <hbox>
+    <label>
+        <text>"x-max"</text>
+    </label>
+    <led>
+        <halpin>"x-max"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    <label>
+        <text>"x-min"</text>
+    </label>
+    <led>
+        <halpin>"x-min"</halpin>
+        <size>20</size>
+        <on_color>"green"</on_color>
+        <off_color>"red"</off_color>
+    </led>
+    </hbox>
+    </labelframe>
+    <labelframe text="Z Limits">
+        <font>("Helvetica",16)</font>
+        <hbox>
+        <label>
+            <text>"z-max"</text>
+        </label>
+        <led>
+            <halpin>"z-max"</halpin>
+            <size>20</size>
+            <on_color>"green"</on_color>
+            <off_color>"red"</off_color>
+        </led>
+        <label>
+            <text>"z-min"</text>
+        </label>
+        <led>
+            <halpin>"z-min"</halpin>
+            <size>20</size>
+            <on_color>"green"</on_color>
+            <off_color>"red"</off_color>
+        </led>
+        </hbox>
+    </labelframe>
+    <labelframe text="A Limits">
+        <font>("Helvetica",16)</font>
+        <hbox>
+        <label>
+            <text>"a-max"</text>
+        </label>
+        <led>
+            <halpin>"a-max"</halpin>
+            <size>20</size>
+            <on_color>"green"</on_color>
+            <off_color>"red"</off_color>
+        </led>
+        <label>
+            <text>"a-min"</text>
+        </label>
+        <led>
+            <halpin>"a-min"</halpin>
+            <size>20</size>
+            <on_color>"green"</on_color>
+            <off_color>"red"</off_color>
+        </led>
+        </hbox>
+    </labelframe>
+    <labelframe text="C Limits">
+        <font>("Helvetica",16)</font>
+        <hbox>
+        <label>
+            <text>"c-max"</text>
+        </label>
+        <led>
+            <halpin>"c-max"</halpin>
+            <size>20</size>
+            <on_color>"green"</on_color>
+            <off_color>"red"</off_color>
+        </led>
+        <label>
+            <text>"c-min"</text>
+        </label>
+        <led>
+            <halpin>"c-min"</halpin>
+            <size>20</size>
+            <on_color>"green"</on_color>
+            <off_color>"red"</off_color>
+        </led>
+        </hbox>
+    </labelframe>
+    
+    <labelframe text="IO Outputs">
+        <font>("Helvetica",16)</font>
+        <hbox>
+            <checkbutton>
+                <halpin>"IO1_out0"</halpin>
+                <text>"IO1_out0"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out1"</halpin>
+                <text>"IO1_out1"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out2"</halpin>
+                <text>"lights"</text>
+                <initval>1</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out3"</halpin>
+                <text>"IO1_out3"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out4"</halpin>
+                <text>"IO1_out4"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out5"</halpin>
+                <text>"IO1_out5"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out6"</halpin>
+                <text>"IO1_out6"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+		<hbox>
+            <checkbutton>
+                <halpin>"IO1_out7"</halpin>
+                <text>"IO1_out7"</text>
+                <initval>0</initval>
+            </checkbutton>
+        </hbox>
+    </labelframe>
+	<labelframe text="IO inputs">
+    <font>("Helvetica",16)</font>
+	<hbox>
+		<led halpin="io1_in_00" on_color="yellow" off_color="black"/>
+		<label text="io1_in_00"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_01" on_color="yellow" off_color="black"/>
+		<label text="jack"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_02" on_color="yellow" off_color="black"/>
+		<label text="gripper"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_03" on_color="yellow" off_color="black"/>
+		<label text="io1_in_03"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_04" on_color="yellow" off_color="black"/>
+		<label text="io1_in_04"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_05" on_color="yellow" off_color="black"/>
+		<label text="io1_in_05"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_06" on_color="yellow" off_color="black"/>
+		<label text="io1_in_06"/>
+	</hbox>
+    <hbox>
+		<led halpin="io1_in_07" on_color="yellow" off_color="black"/>
+		<label text="io1_in_07"/>
+	</hbox>
+    
+	</labelframe>
+    <labelframe text="IO Outputs condition">
+    <font>("Helvetica",16)</font>
+	<hbox>
+		<led halpin="jack_output" on_color="yellow" off_color="black"/>
+		<label text="jack output"/>
+	</hbox>
+    <hbox>
+		<led halpin="gripper_jack_output" on_color="yellow" off_color="black"/>
+		<label text="gripper_jack output"/>
+	</hbox>
+    <hbox>
+		<led halpin="gripper_output" on_color="yellow" off_color="black"/>
+		<label text="gripper output"/>
+	</hbox>
+    <hbox>
+		<led halpin="coolant_output" on_color="yellow" off_color="black"/>
+		<label text="coolant output"/>
+	</hbox>
+    
+    
+	</labelframe>
+</pyvcp>

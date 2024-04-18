@@ -1,0 +1,13 @@
+g18 (xz plane)
+g21 (set unit to mm)
+
+g92.1
+g93 g01 x2 z69 a0 f15
+g92 x1.26 z16 c0
+M101
+m3 s3000
+g4 p15
+
+
+o101 call
+M2 M5 (end program)

@@ -1,0 +1,28 @@
+09-04 13
+09-10 0
+00-20 1
+00-21 2
+00-30 1
+00-31 2
+00-32 1
+01-00 200
+Pr.01-01 Motor 1 rated / base frequency (Hz)  200
+Pr.01-02 Motor 1 rated / base voltage (VAC)  220
+01-03 100
+01-04 110
+01-05 50
+01-06 55
+01-07 .50
+01-08 .55
+01-09 .5
+01-10 200
+01-11 0
+
+Pr.05-01 Full-load current for induction motor 1 (A) 1.6
+Pr.05-02 Rated power for induction motor 1 (kW) 0.375
+Pr.05-03 Rated speed for induction motor 1 (rpm) 12000 
+Pr.05-04 Number of poles for induction motor 1 (poles) 2
+
+Pr.05-33 0
+Pr.05-00 1
+Run

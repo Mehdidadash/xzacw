@@ -1,0 +1,4 @@
+o<lathesub> sub
+g01 x100 f15 g93
+o<lathesub> endsub
+M2

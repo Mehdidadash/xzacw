@@ -1,0 +1,14 @@
+# Spindle output speed
+net spindle-rpm-out vfdmod.spindle.rpm-out => pyvcp.rpm-out
+net spindle-at-speed <= pyvcp.at-speed
+
+# Communication
+net pyvcp-is-connected vfdmod.rs485.is-connected => pyvcp.is-connected
+net pyvcp-error-count vfdmod.rs485.error-count => pyvcp.error-count
+net pyvcp-last-error vfdmod.rs485.last-error => pyvcp.last-error
+
+# User parameters
+net pyvcp-dc-bus-voltage vfdmod.parameters.dc-bus-voltage => pyvcp.dc-bus-voltage
+net pyvcp-fault-reset vfdmod.parameters.fault-reset => pyvcp.fault-reset
+net pyvcp-output-current vfdmod.parameters.output-current => pyvcp.output-current
+net pyvcp-output-voltage vfdmod.parameters.output-voltage => pyvcp.output-voltage
