@@ -1,0 +1,4 @@
+#!/bin/bash
+# file to turn on do1 port 0 to open the coolant
+halcmd setp or2.11.in1 True
+exit 0

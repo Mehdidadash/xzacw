@@ -163,7 +163,7 @@
       <sdoConfig idx="6093" subIdx="1"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Numerator (Gear Ratio (Numerator) (N1)) -->
       <sdoConfig idx="6093" subIdx="2"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Feed_constant(Gear Ratio (Denominator) (M)) -->
       <sdoConfig idx="6099" subIdx="1"><sdoDataRaw data ="F4 01"/></sdoConfig>   <!-- Speed during search for switch -->
-      <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="14"/></sdoConfig>   <!-- Speed during search for zero -->
+      <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="64"/></sdoConfig>   <!-- Speed during search for zero -->
       <sdoConfig idx="2212" subIdx="0"><sdoDataRaw data ="08 01"/></sdoConfig>   <!-- DO1 Functional Planning -->
 
       <syncManager idx="2" dir="out">

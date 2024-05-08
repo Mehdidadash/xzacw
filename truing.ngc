@@ -1,0 +1,60 @@
+g18 (xz plane)
+g21 (set unit to mm)
+g90
+(g0 x115.5 z4.82)
+g92 x0 z0 
+#1=.05 (perpendicular depth of cut)
+#2=45 (degree)
+#3=.1 (safe distance in x and z)
+#4=33.2 (width of wheel)
+#5=460 (begining of loop)
+#6=0 (curent x)
+#7=0 (curent z)
+#8=80 (feed)
+#9=3000 (spindle speed)
+#10=300 (c axis rpm)
+#11=0 (c axis begining)
+#12=33 (stick width)
+#13=0(stick loop)
+#17=[#1/COS[#2]] (steps in x )
+#18=[#17/TAN[#2]] (steps in z )
+#19=[[#18*TAN[#2]]+[#3*TAN[#2]]] (=> x2=-#3-#19 and z2=0)
+#20=[[#19+#3]/TAN[#2]] (=-z3 and x3=0)
+#21=[#3*TAN[#2]] (x1)
+#22=[[#21+#3]/TAN[#2]] (z1)
+m3 s[#9]
+g4 p4
+#40=[#5*#17+#21]
+#41=[#5*#18+#22]
+o101 while [#7 LT #4]
+    #34=0
+    #6=[#5*#17+#21]
+    #7=[#5*#18+#22]
+    o102 if [ABS[#6] GT #12]
+        #6=[#12]
+        #34=[#13*#18+#22]
+        #13=[#13+1]
+    o102 endif
+    #30= [[[#5-10]*#17+#21]]
+    #31= [[[#5-10]*#18+#22]]
+    (#32=[SQRT[#30*#30+#31+#31]])
+    #33=[#32*#10*360/#8]
+    #5=[#5+1]
+    G1 x[-#6] f[#8*3]
+    g1 x0 z[-#7] f[#8]
+    g91 g0 z[#18*10] 
+    g90 g0 x[-#6+#17*10] z[-#34]
+    
+    
+o101 endwhile
+(print,c dis = #33)
+(print,start x = #40)
+(print,start z = #41)
+
+(print,end of x = #6)
+(print,end of z = #7)
+(print,dash five = #5)
+g90
+g0 x0 z0
+g92.1
+M2 M5 (end program)

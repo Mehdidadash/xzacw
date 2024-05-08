@@ -1,0 +1,5 @@
+#!/bin/bash
+# file to turn on do1 port 0 to bring near gripper the gripper_jack
+halcmd setp or2.10.in1 True
+exit 0
+

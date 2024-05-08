@@ -8,8 +8,9 @@ set ::watchlist {
     pin+spindle.0.speed-in
     pin+spindle.0.speed-out
     sig+spindle-at-speed
+    pin+ini.1.min_limit
 }
-set ::workmode watchhal
+set ::workmode showhal
 set ::watchInterval 100
 set ::col1_width 100
 set ::ffmts 

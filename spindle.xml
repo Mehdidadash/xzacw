@@ -164,7 +164,7 @@
         <hbox>
             <checkbutton>
                 <halpin>"IO1_out0"</halpin>
-                <text>"IO1_out0"</text>
+                <text>"spindle fans"</text>
                 <initval>0</initval>
             </checkbutton>
         </hbox>
@@ -226,11 +226,11 @@
 	</hbox>
     <hbox>
 		<led halpin="io1_in_01" on_color="yellow" off_color="black"/>
-		<label text="jack"/>
+		<label text="io1_in_01"/>
 	</hbox>
     <hbox>
 		<led halpin="io1_in_02" on_color="yellow" off_color="black"/>
-		<label text="gripper"/>
+		<label text="lights"/>
 	</hbox>
     <hbox>
 		<led halpin="io1_in_03" on_color="yellow" off_color="black"/>

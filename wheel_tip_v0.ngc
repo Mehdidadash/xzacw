@@ -1,0 +1,23 @@
+g18 (xz plane)
+g21 (set unit to mm)
+g61
+g92.1
+m103
+g0 x.75
+g92 z0 c0 x.775 w0
+g0 x.75
+m106
+m3 s3000
+g4 p3
+
+g93 g01 x.3 c3600 f4
+g93 g01 x.6 c7200 f4
+g93 g01 z2 c9000 f6
+g93 g01 z-2 c12800 f4
+g92 c0
+g0 x5
+g92.1
+m104
+m102
+m106
+M2 M5 (end program)
