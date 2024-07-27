@@ -1,0 +1,108 @@
+#70=11 (count of files)
+#71=1 (iritation parameter)
+#72=.380 (x touch place)
+#73=.75
+#74=[#73+.6-#72]
+o110 while [#71 LT #70]
+g18 (xz plane)
+g21 (set unit to mm)
+g90
+g92.1
+g0 x6
+g93 g01 z54 a0 w54 f15 (decrease wasted material by 20mm)
+g0 x[#73]
+g92 x[#74] z0 c0 w0
+M103
+m3 s3500
+g4 p2
+m107
+g93 g01 z-2 a0 c0 f15
+
+
+g94 g01 x.65 f60
+g93 g01 x.5 c7200 f10
+g92 c0
+g94 g01 x.65 f60
+
+g94 g01 z-3 f600
+g93 g01 x.5 f10
+g94 g01 x.65 f60
+
+g94 g01 z-4 c0 f600
+g93 g01 x.5 f10
+g94 g01 x.65 f60
+
+g94 g01 z-5 c120 f600
+g93 g01 x.5 f10
+g94 g01 x.65 f60
+
+g94 g01 z0 f600
+g92 c0
+
+#2=1 (radial multipication)
+#3=0(radial offset)
+#4=1 (feed override)
+#7=0.30498
+#8=16
+#9=0
+g93 x.65 a[#9] f60
+g94 g01 x[#7*#2] z0 f2
+o<fii_p08-25_01_v9> call [1*#4] [#2] [#3]
+g94 g01 x1 f60
+g93 g01 x.65  z0 a[#9] c120 f60
+g94 g01 x[#7*#2] z0 f2
+g92 c0
+
+o<fii_p08-25_01_v9> call [1.2*#4] [#2] [#3]
+g94 g01 x1 f60
+g93 g01 x.65  z0 a[#9] c120 f60
+g94 g01 x[#7*#2] z0 f2
+g92 c0
+
+o<fii_p08-25_01_v9> call [1.5*#4] [#2] [#3]
+g92 c0
+(g93 x.6 a0 f6)
+(g93 g01 x.4 z17 c3600 f2)
+(g94 g01 z16.1 c7200 f5)
+(g93 g01 x-.1 z16.3 c10800 f2)
+(g94 g01 x6 z16 f120)
+(g93 g01 z16.1 c-3600 f4)
+g94 g01 x.3 c-360 f4 ()
+g94 g01 x.6 z16.6 c-10800 f2
+g94 g01 x.6 z16.7 c-11160 f10
+g94 g01 z16.1 f10
+g94 g01 x.1 c-13320 f3
+g93 g01 x-.1 c-15120 f8
+m108
+g01 x6 a0 f120
+g0 z16
+M105
+g4 p1
+M101
+g4 p1
+M106
+g4 p1
+M102
+g4 p5
+g94 g01 z-14 f600
+g01 x6
+M105
+g4 p1
+M101
+g4 p1
+M104
+g4 p1
+g01 z16 f600
+M103
+g4 p1
+M102
+g4 p1
+g0 z0
+g92.1
+g93 g01 z54 a0 f9
+m106
+
+#71=[#71+1]
+o110 endwhile
+
+M2 M5 (end program)

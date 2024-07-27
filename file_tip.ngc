@@ -1,0 +1,8 @@
+g18 (xz plane)
+g21 (set unit to mm)
+g61
+g92.1
+g90
+g92 x0 z0 c0
+m103
+m105

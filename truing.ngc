@@ -3,18 +3,16 @@ g21 (set unit to mm)
 g90
 (g0 x115.5 z4.82)
 g92 x0 z0 
-#1=.05 (perpendicular depth of cut)
+#1=.01 (perpendicular depth of cut)
 #2=45 (degree)
 #3=.1 (safe distance in x and z)
-#4=33.2 (width of wheel)
-#5=460 (begining of loop)
+#4=34 (width of wheel)
+#5=2335 (begining of loop)
 #6=0 (curent x)
 #7=0 (curent z)
-#8=80 (feed)
+#8=400 (feed)
 #9=3000 (spindle speed)
-#10=300 (c axis rpm)
-#11=0 (c axis begining)
-#12=33 (stick width)
+#12=42 (stick width)
 #13=0(stick loop)
 #17=[#1/COS[#2]] (steps in x )
 #18=[#17/TAN[#2]] (steps in z )
@@ -24,36 +22,56 @@ g92 x0 z0
 #22=[[#21+#3]/TAN[#2]] (z1)
 m3 s[#9]
 g4 p4
-#40=[#5*#17+#21]
-#41=[#5*#18+#22]
+#50=[#5*#17+#21]
+#51=[#5*#18+#22]
+
+#40=0
+#6=[#5*#17+#21]
+#45=[[#12-#21]/[#17]]
+#46=ABS[#45]
+o103 if [#45 LT #5]
+#13=[#5-ABS[#45]]
+#46=ABS[#45]
+o103 endif
 o101 while [#7 LT #4]
     #34=0
     #6=[#5*#17+#21]
     #7=[#5*#18+#22]
+    #35=[-#6+#17*10]
+    #36=0
     o102 if [ABS[#6] GT #12]
+    #38=[[#6-#21]/[#17]]
+    #39=[#38*#18+#22]
+    #40=[#38*#18+#22+#13*#18-#5*#18-#22-.2]
+    
         #6=[#12]
-        #34=[#13*#18+#22]
+        #34=[[#13-6]*#18+#22]
+        #34=[[[#5]*#17+#21]-[#46*#17+#21]]
+        #35=-#6
+        #36=[-#18-.2]
         #13=[#13+1]
     o102 endif
-    #30= [[[#5-10]*#17+#21]]
-    #31= [[[#5-10]*#18+#22]]
-    (#32=[SQRT[#30*#30+#31+#31]])
-    #33=[#32*#10*360/#8]
+    
     #5=[#5+1]
+    g90 g1 z[-#34] f[#8*3]
     G1 x[-#6] f[#8*3]
     g1 x0 z[-#7] f[#8]
     g91 g0 z[#18*10] 
-    g90 g0 x[-#6+#17*10] z[-#34]
+    g90 g0 x[#35] z[-#40]
     
+    g90
     
 o101 endwhile
 (print,c dis = #33)
-(print,start x = #40)
-(print,start z = #41)
+(print,start x = #50)
+(print,start z = #51)
 
 (print,end of x = #6)
 (print,end of z = #7)
 (print,dash five = #5)
+(print,dash 13 = #13)
+(print,dash 7 = #7)
+(print,dash 34 = [#12+#34-#7])
 g90
 g0 x0 z0
 g92.1

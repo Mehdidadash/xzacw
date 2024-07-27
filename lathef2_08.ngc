@@ -1,15 +1,20 @@
+#1=2 (count of files)
+#2=1 (iritation parameter)
+o110 while [#2 LT #1]
 g18 (xz plane)
 g21 (set unit to mm)
 g90
 g92.1
-g0 x30
+g0 x6
 g93 g01 z74 a0 w54 f15
 g0 x.75
-g92 x.745 z0 c0 w0
+g92 x.75 z0 c0 w0
 M103
-m3 s3000
+m3 s4000
 g4 p2
 
 
 o102 call
+#2=[#2+1]
+o110 endwhile
 M2 M5 (end program)

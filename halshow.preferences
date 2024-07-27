@@ -1,6 +1,6 @@
 # Halshow settings
 # This file is generated automatically.
-wm geometry . 796x361+982+295
+wm geometry . 1440x807+230+120
 placeFrames 0.44622093023255816
 set ::ratio 0.44622093023255816
 set ::old_w_leftf 307
@@ -9,8 +9,12 @@ set ::watchlist {
     pin+spindle.0.speed-out
     sig+spindle-at-speed
     pin+ini.1.min_limit
+    pin+joint.0.neg-hard-limit
+    pin+joint.0.neg-lim-sw-in
+    pin+joint.0.pos-hard-limit
+    pin+joint.0.pos-lim-sw-in
 }
-set ::workmode showhal
+set ::workmode watchhal
 set ::watchInterval 100
 set ::col1_width 100
 set ::ffmts 

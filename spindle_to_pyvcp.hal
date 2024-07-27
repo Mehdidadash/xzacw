@@ -83,4 +83,4 @@ net DO01_02 lcec.0.DO1.dout-2 <= or2.10.out => pyvcp.gripper_jack_output
 
 #coolant
 #M106 for or2.10.in1 true and M107 for or2.11.in1 False
-net DO01_03 lcec.0.DO1.dout-3 <= or2.11.out => pyvcp.coolant_output
+net DO01_03 wsum.0.bit.1.in <= or2.11.out => pyvcp.coolant_output
