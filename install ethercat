@@ -1,0 +1,6 @@
+sudo apt remove ethercat-dkms libethercat libethercat-dev ethercat-master
+sudo apt install ethercat-dkms libethercat libethercat-dev ethercat-master
+sudo apt install linuxcnc-ethercat
+sudo udevadm control --reload-rules
+sudo systemctl enable ethercat.service
+
