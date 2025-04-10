@@ -1,0 +1,24 @@
+
+#72=.148  (x touch place last time: .31)
+#73=.75
+#74=[#73+.6-#72]
+#5=1
+g18 (xz plane)
+g21 (set unit to mm)
+g90
+g92.1
+g0 x6
+g93 g01 z56 a0 w54 f[#5*30] (decrease wasted material by 20mm)
+g0 x[#73]
+g92 x[#74] z0 a0 c0 w0
+M103
+m3 s3500
+g4 p2
+g93 g01 z-5 a0 c0 f[#5*120]
+g94 g01 x.62 f[#5*60]
+g93 g01 x.5 c54000 f[#5*1] (just touch)
+g92.1
+g0 x6
+g0 z54
+g01 g93 c0 f[#5*4]
+M2 M5 (end program)

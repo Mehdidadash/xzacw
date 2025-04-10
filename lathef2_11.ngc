@@ -1,68 +1,57 @@
-#70=11 (count of files)
+#70=2(count of files)
 #71=1 (iritation parameter)
-#72=.046  (x touch place last time: .31)
+#72=.0  (x touch place last time: .31)
 #73=.75
-#74=[#73+.6-#72]
-
 #2=1 (radial multipication)
 #3=0(radial offset)
 #4=2 (grinding feed override)
 #5=2 (other ops feed override)
 o110 while [#71 LT #70]
+#74=[#73+.6-#72]
 g18 (xz plane)
 g21 (set unit to mm)
 g90
 g92.1
-g0 x6
-g93 g01 z54 a0 w54 f[#5*15] (decrease wasted material by 20mm)
+g0 x[#73+6]
+g93 g01 z72 a0 w54 f[#5*15] (decrease wasted material by 20mm)
 g0 x[#73]
 g92 x[#74] z0 a0 c0 w0
 M103
 m3 s3500
 g4 p5
-m107
+m107 (coolant)
 g93 g01 z-2 a0 c0 f[#5*15]
-
-
 g94 g01 x.65 f[#5*60]
 g93 g01 x.5 c7200 f[#5*10]
 g92 c0
 g94 g01 x.65 f[#5*60]
-
 g94 g01 z-3 f[#5*600]
 g93 g01 x.5 f[#5*10]
 g94 g01 x.65 f[#5*60]
-
 g94 g01 z-4 c0 f[#5*600]
 g93 g01 x.5 f[#5*10]
 g94 g01 x.65 f[#5*60]
-
 g94 g01 z-5 c120 f[#5*600]
 g93 g01 x.5 f[#5*10]
 g94 g01 x.65 f[#5*60]
-
 g94 g01 z0 f[#5*600]
 g92 c0
-
-
-#7=0.2984
+#7=0.44289
 #8=16
-#9=0
+#9=-42.69461
 g93 x.65 a[#9] f[#5*60]
 g94 g01 x[#7*#2+#3] z0 f[#5*2]
-o<fii_p08-25_01_v11> call [1*#4] [#2] [#3]
+o<f1_v01_2025-01-06> call [1*#4] [#2] [#3]
 g94 g01 x1 f[#5*60]
 g93 g01 x.65  z0 a[#9] c120 f[#5*60]
 g94 g01 x[#7*#2+#3] z0 f[#5*2]
 g92 c0
-
-o<fii_p08-25_01_v11> call [1.2*#4] [#2] [#3]
+o<f1_v01_2025-01-06> call [1.2*#4] [#2] [#3]
 g94 g01 x1 f[#5*60]
 g93 g01 x.65  z0 a[#9] c120 f[#5*60]
 g94 g01 x[#7*#2+#3] z0 f[#5*2]
 g92 c0
-
-o<fii_p08-25_01_v11> call [1.5*#4] [#2] [#3]
+o<f1_v01_2025-01-06> call [1.5*#4] [#2] [#3]
 g92 c0
 (g93 x.6 a0 f[#5*6])
 (g93 g01 x.4 z17 c3600 f[#5*2])
@@ -73,11 +62,12 @@ g92 c0
 g94 g01 x.3 c-360 f[#5*4] ()
 g94 g01 x.6 z16.6 c-10800 f[#5*2]
 g94 g01 x.6 z16.7 c-11160 f[#5*10]
-g94 g01 z16.1 f[#5*10]
-g94 g01 x.1 c-13320 f[#5*3]
-g93 g01 x-.15 c-15120 f[#5*8]
+g94 g01 z16.45 f[#5*10]
+g94 g01 x.4 c-9000 f[#5*3]
+g93 g01 x-.45 c-3600 f[#5*4]
+
+g01 x16 a0 c0 f[#5*20]
 m108
-g01 x6 a0 f[#5*120]
 g0 z16
 M105
 g4 p1
@@ -87,7 +77,7 @@ M106
 g4 p1
 M102
 g4 p5
-g94 g01 z-14 f[#5*600]
+g94 g01 z-12 f[#5*600]
 g01 x6
 M105
 g4 p1
@@ -102,12 +92,9 @@ M102
 g4 p1
 g0 z0
 g92.1
-g93 g01 z54 a0 f[#5*9]
+g93 g01 z72 a0 f[#5*9]
 m106
-
-#72=[#72-0.0065]
+#72=[#72-0.0024]
 #71=[#71+1]
-
 o110 endwhile
-
 M2 M5 (end program)

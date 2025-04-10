@@ -308,7 +308,7 @@
       <sdoConfig idx="6093" subIdx="1"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Numerator (Gear Ratio (Numerator) (N1)) -->
       <sdoConfig idx="6093" subIdx="2"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Feed_constant(Gear Ratio (Denominator) (M)) -->
       <sdoConfig idx="6099" subIdx="1"><sdoDataRaw data ="2c 01"/></sdoConfig>   <!-- Speed during search for switch defualt 100 x64-->
-      <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="64"/></sdoConfig>   <!-- Speed during search for zero default 20 x14-->
+      <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="20"/></sdoConfig>   <!-- Speed during search for zero default 20 x14-->
       <sdoConfig idx="2212" subIdx="0"><sdoDataRaw data ="30"/></sdoConfig>   <!-- DO1 Functional Planning -->
       <sdoConfig idx="2213" subIdx="0"><sdoDataRaw data ="31"/></sdoConfig>   <!-- DO2 Functional Planning -->
       <sdoConfig idx="2214" subIdx="0"><sdoDataRaw data ="32"/></sdoConfig>   <!-- DO3 Functional Planning -->
@@ -324,12 +324,7 @@
           <!-- error window -->
           <!-- <pdoEntry idx="6065" subIdx="00" bitLen="32" halPin="error-window" halType="s32"/> -->
           <!-- Digtial Outputs (manufacturer's extension ECT86/ECT60)-->
-          <pdoEntry idx="2406" subIdx="00" bitLen="16" halType="complex">
-            <complexEntry bitLen="1" halPin="out-1" halType="bit"/>
-            <complexEntry bitLen="1" halPin="out-2" halType="bit"/>
-            <complexEntry bitLen="1" halPin="out-3" halType="bit"/>
-            <complexEntry bitLen="13"/>
-          </pdoEntry>
+          
           <!-- auxilary encoder controll -->
         </pdo>
       </syncManager>
