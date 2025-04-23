@@ -1,10 +1,47 @@
-# turn off spindle, mist and coolant
-unlinkp lcec.0.3.out-01
-unlinkp lcec.0.3.out-02
-unlinkp lcec.0.3.out-03
-setp lcec.0.3.out-01 0
-setp lcec.0.3.out-02 0
-setp lcec.0.3.out-03 0
+# Unlink pins to allow direct control
+unlinkp wsum.0.bit.0.in
+unlinkp wsum.0.bit.1.in
+unlinkp wsum.0.bit.2.in
+unlinkp wsum.0.bit.3.in
+unlinkp wsum.0.bit.4.in
+unlinkp wsum.0.bit.5.in
+unlinkp wsum.0.bit.6.in
+unlinkp wsum.0.bit.7.in
+
+unlinkp lcec.0.DO1.dout-0
+unlinkp lcec.0.DO1.dout-1
+unlinkp lcec.0.DO1.dout-2
+unlinkp lcec.0.DO1.dout-3
+
+unlinkp or2.8.in1
+unlinkp or2.9.in1
+unlinkp or2.10.in1
+unlinkp or2.11.in1
+unlinkp or2.12.in0
+unlinkp and2.0.in0
+unlinkp and2.0.in1
+unlinkp and2.1.in0
+unlinkp and2.1.in1
+unlinkp mux4.0.sel0
+unlinkp mux4.0.sel1
+
 unlinkp mb2hal.Operation_command.00
-setp mb2hal.Operation_command.00 1
-# setp mb2hal.Fault_control.00 1 #E.F.
+
+# Reset all outputs to ensure safe shutdown
+setp wsum.0.bit.0.in 0
+setp wsum.0.bit.1.in 0
+setp wsum.0.bit.2.in 0
+setp wsum.0.bit.3.in 0
+setp wsum.0.bit.4.in 0
+setp wsum.0.bit.5.in 0
+setp wsum.0.bit.6.in 0
+setp wsum.0.bit.7.in 0
+
+setp lcec.0.DO1.dout-0 0
+setp lcec.0.DO1.dout-1 0
+setp lcec.0.DO1.dout-2 0
+setp lcec.0.DO1.dout-3 0
+
+# Stop spindle using mb2hal
+setp mb2hal.Operation_command.00 1  # Set spindle to "stop" state
+setp mux4.0.sel0 1                 # Ensure mux4 is in "stop" mode

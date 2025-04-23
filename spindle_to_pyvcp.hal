@@ -7,7 +7,7 @@ net coolant-on => pyvcp.coolant-on
 # net DI3 => pyvcp.DI3
 
 # net DO0 <= pyvcp.DO0
-# net DO1 <= pyvcp.DO11
+# net DO1 <= pyvcp.DO1
 # net DO2 <= pyvcp.DO2
 # net DO3 <= pyvcp.DO3
 

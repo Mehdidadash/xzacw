@@ -13,7 +13,7 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JO
 
 loadusr -W lcec_conf ethercat-conf.xml
 loadrt lcec
-loadrt cia402 count=5
+loadrt mycia402 count=5
 loadrt pid names=pid.x,pid.z,pid.a,pid.c,pid.w debug=1
 #loadrt classicladder_rt --modmaster
 
@@ -23,11 +23,11 @@ loadrt pid names=pid.x,pid.z,pid.a,pid.c,pid.w debug=1
 
 addf lcec.read-all servo-thread
 
-addf cia402.0.read-all servo-thread
-addf cia402.1.read-all servo-thread
-addf cia402.2.read-all servo-thread
-addf cia402.3.read-all servo-thread
-addf cia402.4.read-all servo-thread
+addf mycia402.0.read-all servo-thread
+addf mycia402.1.read-all servo-thread
+addf mycia402.2.read-all servo-thread
+addf mycia402.3.read-all servo-thread
+addf mycia402.4.read-all servo-thread
 
 addf motion-command-handler servo-thread
 addf motion-controller servo-thread
@@ -40,11 +40,11 @@ addf pid.w.do-pid-calcs servo-thread
 
 #addf classicladder.0.refresh servo-thread
 
-addf cia402.0.write-all servo-thread
-addf cia402.1.write-all servo-thread
-addf cia402.2.write-all servo-thread
-addf cia402.3.write-all servo-thread
-addf cia402.4.write-all servo-thread
+addf mycia402.0.write-all servo-thread
+addf mycia402.1.write-all servo-thread
+addf mycia402.2.write-all servo-thread
+addf mycia402.3.write-all servo-thread
+addf mycia402.4.write-all servo-thread
 addf lcec.write-all servo-thread
 
 
@@ -68,7 +68,7 @@ addf mux4.0 servo-thread
 loadrt and2 count=2
 addf and2.0 servo-thread
 addf and2.1 servo-thread
-loadrt or2 count=12
+loadrt or2 count=13
 addf or2.0 servo-thread
 addf or2.1 servo-thread
 addf or2.2 servo-thread
@@ -81,6 +81,7 @@ addf or2.8 servo-thread
 addf or2.9 servo-thread
 addf or2.10 servo-thread
 addf or2.11 servo-thread
+addf or2.12 servo-thread
 loadrt not
 addf not.0 servo-thread
 
@@ -103,33 +104,33 @@ loadrt conv_s32_float
 #
 # Joint 0
 #
-setp cia402.0.csp-mode 1
-setp cia402.0.velo-scale 5
-setp cia402.0.pos-scale 256000
+setp mycia402.0.csp-mode 1
+setp mycia402.0.velo-scale 5
+setp mycia402.0.pos-scale 256000
 
 #modification
 
-#from servo(ethercat) to cia402
-net x-statusword      lcec.0.0.cia-statusword => cia402.0.statusword
-net x-opmode-display  lcec.0.0.opmode-display => cia402.0.opmode-display
-net x-drv-act-pos     lcec.0.0.actual-position => cia402.0.drv-actual-position
-net x-drv-act-velo    lcec.0.0.actual-velocity => cia402.0.drv-actual-velocity
+#from servo(ethercat) to mycia402
+net x-statusword      lcec.0.0.cia-statusword => mycia402.0.statusword
+net x-opmode-display  lcec.0.0.opmode-display => mycia402.0.opmode-display
+net x-drv-act-pos     lcec.0.0.actual-position => mycia402.0.drv-actual-position
+net x-drv-act-velo    lcec.0.0.actual-velocity => mycia402.0.drv-actual-velocity
 
 
-#from cia402 to servo(ethercat)
-net x-controlword         cia402.0.controlword => lcec.0.0.cia-controlword
-net x-modes-of-operation  cia402.0.opmode => lcec.0.0.opmode
-net x-drv-target-pos      cia402.0.drv-target-position => lcec.0.0.target-position
-net x-drv-target-velo     cia402.0.drv-target-velocity => lcec.0.0.target-velocity
+#from mycia402 to servo(ethercat)
+net x-controlword         mycia402.0.controlword => lcec.0.0.cia-controlword
+net x-modes-of-operation  mycia402.0.opmode => lcec.0.0.opmode
+net x-drv-target-pos      mycia402.0.drv-target-position => lcec.0.0.target-position
+net x-drv-target-velo     mycia402.0.drv-target-velocity => lcec.0.0.target-velocity
 
 
 #from motion to cia
 
-net x-home-index <= joint.0.index-enable  => cia402.0.home
-net x-enable     <= joint.0.amp-enable-out => cia402.0.enable
-net x-amp-fault  => joint.0.amp-fault-in   <= cia402.0.drv-fault
-net x-pos-cmd    <= joint.0.motor-pos-cmd  => cia402.0.pos-cmd
-net x-pos-fb     => joint.0.motor-pos-fb   <= cia402.0.pos-fb
+net x-home-index <= joint.0.index-enable  => mycia402.0.home
+net x-enable     <= joint.0.amp-enable-out => mycia402.0.enable
+net x-amp-fault  => joint.0.amp-fault-in   <= mycia402.0.drv-fault
+net x-pos-cmd    <= joint.0.motor-pos-cmd  => mycia402.0.pos-cmd
+net x-pos-fb     => joint.0.motor-pos-fb   <= mycia402.0.pos-fb
 
 #modifications
 
@@ -149,33 +150,33 @@ net max-x => joint.0.pos-lim-sw-in
 #
 # Joint 1
 #
-setp cia402.1.csp-mode 1
-# setp cia402.1.velo-scale 5
-setp cia402.1.pos-scale 256000
+setp mycia402.1.csp-mode 1
+# setp mycia402.1.velo-scale 5
+setp mycia402.1.pos-scale 256000
 
 #modification
 
-#from servo(ethercat) to cia402
-net z-statusword      lcec.0.1.cia-statusword => cia402.1.statusword
-net z-opmode-display  lcec.0.1.opmode-display => cia402.1.opmode-display
-net z-drv-act-pos     lcec.0.1.actual-position => cia402.1.drv-actual-position
-net z-drv-act-velo    lcec.0.1.actual-velocity => cia402.1.drv-actual-velocity
+#from servo(ethercat) to mycia402
+net z-statusword      lcec.0.1.cia-statusword => mycia402.1.statusword
+net z-opmode-display  lcec.0.1.opmode-display => mycia402.1.opmode-display
+net z-drv-act-pos     lcec.0.1.actual-position => mycia402.1.drv-actual-position
+net z-drv-act-velo    lcec.0.1.actual-velocity => mycia402.1.drv-actual-velocity
 
 
-#from cia402 to servo(ethercat)
-net z-controlword         cia402.1.controlword => lcec.0.1.cia-controlword
-net z-modes-of-operation  cia402.1.opmode => lcec.0.1.opmode
-net z-drv-target-pos      cia402.1.drv-target-position => lcec.0.1.target-position
-net z-drv-target-velo     cia402.1.drv-target-velocity => lcec.0.1.target-velocity
+#from mycia402 to servo(ethercat)
+net z-controlword         mycia402.1.controlword => lcec.0.1.cia-controlword
+net z-modes-of-operation  mycia402.1.opmode => lcec.0.1.opmode
+net z-drv-target-pos      mycia402.1.drv-target-position => lcec.0.1.target-position
+net z-drv-target-velo     mycia402.1.drv-target-velocity => lcec.0.1.target-velocity
 
 
 #from motion to cia
 
-net z-home-index <= joint.1.index-enable  => cia402.1.home
-net z-enable     <= joint.1.amp-enable-out => cia402.1.enable
-net z-amp-fault  => joint.1.amp-fault-in   <= cia402.1.drv-fault
-net z-pos-cmd    <= joint.1.motor-pos-cmd  => cia402.1.pos-cmd
-net z-pos-fb     => joint.1.motor-pos-fb   <= cia402.1.pos-fb
+net z-home-index <= joint.1.index-enable  => mycia402.1.home
+net z-enable     <= joint.1.amp-enable-out => mycia402.1.enable
+net z-amp-fault  => joint.1.amp-fault-in   <= mycia402.1.drv-fault
+net z-pos-cmd    <= joint.1.motor-pos-cmd  => mycia402.1.pos-cmd
+net z-pos-fb     => joint.1.motor-pos-fb   <= mycia402.1.pos-fb
 
 #modifications
 
@@ -192,33 +193,33 @@ net max-z => joint.1.pos-lim-sw-in
 #
 # Joint 2
 #
-setp cia402.2.csp-mode 1
-# setp cia402.2.velo-scale 3.60 #"velocity in machine units per 1 Motor revolution";
-setp cia402.2.pos-scale -355500 #"increments per machine unit";
+setp mycia402.2.csp-mode 1
+# setp mycia402.2.velo-scale 3.60 #"velocity in machine units per 1 Motor revolution";
+setp mycia402.2.pos-scale -355500 #"increments per machine unit";
 
 #modification
 
 
-#from servo(ethercat) to cia402
-net a-statusword      lcec.0.2.cia-statusword => cia402.2.statusword
-net a-opmode-display  lcec.0.2.opmode-display => cia402.2.opmode-display
-net a-drv-act-pos     lcec.0.2.actual-position => cia402.2.drv-actual-position
-net a-drv-act-velo    lcec.0.2.actual-velocity => cia402.2.drv-actual-velocity
+#from servo(ethercat) to mycia402
+net a-statusword      lcec.0.2.cia-statusword => mycia402.2.statusword
+net a-opmode-display  lcec.0.2.opmode-display => mycia402.2.opmode-display
+net a-drv-act-pos     lcec.0.2.actual-position => mycia402.2.drv-actual-position
+net a-drv-act-velo    lcec.0.2.actual-velocity => mycia402.2.drv-actual-velocity
 
 #from motion to cia
 
-net a-home-index <= joint.2.index-enable  => cia402.2.home
-net a-enable     <= joint.2.amp-enable-out => cia402.2.enable
-net a-amp-fault  => joint.2.amp-fault-in   <= cia402.2.drv-fault
-net a-pos-cmd    <= joint.2.motor-pos-cmd  => cia402.2.pos-cmd
-net a-pos-fb     => joint.2.motor-pos-fb   <= cia402.2.pos-fb
+net a-home-index <= joint.2.index-enable  => mycia402.2.home
+net a-enable     <= joint.2.amp-enable-out => mycia402.2.enable
+net a-amp-fault  => joint.2.amp-fault-in   <= mycia402.2.drv-fault
+net a-pos-cmd    <= joint.2.motor-pos-cmd  => mycia402.2.pos-cmd
+net a-pos-fb     => joint.2.motor-pos-fb   <= mycia402.2.pos-fb
 #net a-home          lcec.0.2.in-5          => joint.2.home-sw-in
 
-#from cia402 to servo(ethercat)
-net a-controlword         cia402.2.controlword => lcec.0.2.cia-controlword
-net a-modes-of-operation  cia402.2.opmode => lcec.0.2.opmode
-net a-drv-target-pos      cia402.2.drv-target-position => lcec.0.2.target-position
-net a-drv-target-velo     cia402.2.drv-target-velocity => lcec.0.2.target-velocity
+#from mycia402 to servo(ethercat)
+net a-controlword         mycia402.2.controlword => lcec.0.2.cia-controlword
+net a-modes-of-operation  mycia402.2.opmode => lcec.0.2.opmode
+net a-drv-target-pos      mycia402.2.drv-target-position => lcec.0.2.target-position
+net a-drv-target-velo     mycia402.2.drv-target-velocity => lcec.0.2.target-velocity
 
 #modifications
 
@@ -235,33 +236,33 @@ net max-a => joint.2.pos-lim-sw-in
 
 # Joint 3
 #
-setp cia402.3.csp-mode 1
-setp cia402.3.velo-scale 360
-setp cia402.3.pos-scale -4847.727272
+setp mycia402.3.csp-mode 1
+setp mycia402.3.velo-scale 360
+setp mycia402.3.pos-scale -4847.727272
 
 #modification
 
 
-#from servo(ethercat) to cia402
-net c-statusword      lcec.0.3.cia-statusword => cia402.3.statusword
-net c-opmode-display  lcec.0.3.opmode-display => cia402.3.opmode-display
-net c-drv-act-pos     lcec.0.3.actual-position => cia402.3.drv-actual-position
-net c-drv-act-velo    lcec.0.3.actual-velocity => cia402.3.drv-actual-velocity
+#from servo(ethercat) to mycia402
+net c-statusword      lcec.0.3.cia-statusword => mycia402.3.statusword
+net c-opmode-display  lcec.0.3.opmode-display => mycia402.3.opmode-display
+net c-drv-act-pos     lcec.0.3.actual-position => mycia402.3.drv-actual-position
+net c-drv-act-velo    lcec.0.3.actual-velocity => mycia402.3.drv-actual-velocity
 
 #from motion to cia
 
-net c-home-index <= joint.3.index-enable  => cia402.3.home
-net c-enable     <= joint.3.amp-enable-out => cia402.3.enable
-net c-amp-fault  => joint.3.amp-fault-in   <= cia402.3.drv-fault
-net c-pos-cmd    <= joint.3.motor-pos-cmd  => cia402.3.pos-cmd
-net c-pos-fb     => joint.3.motor-pos-fb   <= cia402.3.pos-fb
+net c-home-index <= joint.3.index-enable  => mycia402.3.home
+net c-enable     <= joint.3.amp-enable-out => mycia402.3.enable
+net c-amp-fault  => joint.3.amp-fault-in   <= mycia402.3.drv-fault
+net c-pos-cmd    <= joint.3.motor-pos-cmd  => mycia402.3.pos-cmd
+net c-pos-fb     => joint.3.motor-pos-fb   <= mycia402.3.pos-fb
 #net c-home          lcec.0.3.in-5          => joint.3.home-sw-in
 
-#from cia402 to servo(ethercat)
-net c-controlword         cia402.3.controlword => lcec.0.3.cia-controlword
-net c-modes-of-operation  cia402.3.opmode => lcec.0.3.opmode
-net c-drv-target-pos      cia402.3.drv-target-position => lcec.0.3.target-position
-net c-drv-target-velo     cia402.3.drv-target-velocity => lcec.0.3.target-velocity
+#from mycia402 to servo(ethercat)
+net c-controlword         mycia402.3.controlword => lcec.0.3.cia-controlword
+net c-modes-of-operation  mycia402.3.opmode => lcec.0.3.opmode
+net c-drv-target-pos      mycia402.3.drv-target-position => lcec.0.3.target-position
+net c-drv-target-velo     mycia402.3.drv-target-velocity => lcec.0.3.target-velocity
 
 #modifications
 
@@ -277,34 +278,34 @@ net max-c => joint.3.pos-lim-sw-in
 
 # Joint 4
 #
-setp cia402.4.csp-mode 1
-# setp cia402.4.velo-scale 5
-setp cia402.4.pos-scale 256000
+setp mycia402.4.csp-mode 1
+# setp mycia402.4.velo-scale 5
+setp mycia402.4.pos-scale 256000
+setp mycia402.4.homing-delay-ns 8000000000  # 8 seconds
 
 #modification
 
-#from servo(ethercat) to cia402
-net w-statusword      lcec.0.4.cia-statusword => cia402.4.statusword
-net w-opmode-display  lcec.0.4.opmode-display => cia402.4.opmode-display
-net w-drv-act-pos     lcec.0.4.actual-position => cia402.4.drv-actual-position
-net w-drv-act-velo    lcec.0.4.actual-velocity => cia402.4.drv-actual-velocity
+#from servo(ethercat) to mycia402
+net w-statusword      lcec.0.4.cia-statusword => mycia402.4.statusword
+net w-opmode-display  lcec.0.4.opmode-display => mycia402.4.opmode-display
+net w-drv-act-pos     lcec.0.4.actual-position => mycia402.4.drv-actual-position
+net w-drv-act-velo    lcec.0.4.actual-velocity => mycia402.4.drv-actual-velocity
 
 
-#from cia402 to servo(ethercat)
-net w-controlword         cia402.4.controlword => lcec.0.4.cia-controlword
-net w-modes-of-operation  cia402.4.opmode => lcec.0.4.opmode
-net w-drv-target-pos      cia402.4.drv-target-position => lcec.0.4.target-position
-net w-drv-target-velo     cia402.4.drv-target-velocity => lcec.0.4.target-velocity
+#from mycia402 to servo(ethercat)
+net w-controlword         mycia402.4.controlword => lcec.0.4.cia-controlword
+net w-modes-of-operation  mycia402.4.opmode => lcec.0.4.opmode
+net w-drv-target-pos      mycia402.4.drv-target-position => lcec.0.4.target-position
+net w-drv-target-velo     mycia402.4.drv-target-velocity => lcec.0.4.target-velocity
 
 
 #from motion to cia
 
-net w-home-index <= joint.4.index-enable  => cia402.4.home
-net w-enable     <= joint.4.amp-enable-out => cia402.4.enable
-net w-amp-fault  => joint.4.amp-fault-in   <= cia402.4.drv-fault
-net w-pos-cmd    <= joint.4.motor-pos-cmd  => cia402.4.pos-cmd
-net w-pos-fb     => joint.4.motor-pos-fb   <= cia402.4.pos-fb
-
+net w-home-index <= joint.4.index-enable  => mycia402.4.home
+net w-enable     <= joint.4.amp-enable-out => mycia402.4.enable
+net w-amp-fault  => joint.4.amp-fault-in   <= mycia402.4.drv-fault
+net w-pos-cmd    <= joint.4.motor-pos-cmd  => mycia402.4.pos-cmd
+net w-pos-fb     => joint.4.motor-pos-fb   <= mycia402.4.pos-fb
 #modifications
 
 
@@ -332,7 +333,7 @@ setp mult2.0.in0 100
 net spindle-speed-cmd spindle.0.speed-out-rps-abs => mult2.0.in1
 net Frequency_command mb2hal.Frequency_command.00 <= mult2.0.out
 net spindle-rpm spindle.0.speed-in <= mb2hal.Motor_actual_speed.00.float
-net S-on and2.0.in0 <= spindle.0.on
+net S-on spindle.0.on => or2.12.in0 => and2.0.in0
 net S-fwd and2.0.in1 <= spindle.0.forward
 net S-on and2.1.in0 
 net S-rev and2.1.in1 <= spindle.0.reverse

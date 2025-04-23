@@ -1,34 +1,24 @@
 # Halshow settings
 # This file is generated automatically.
-wm geometry . 1440x807+153+215
+wm geometry . 960x1093+960+0
 placeFrames 0.44622093023255816
 set ::ratio 0.44622093023255816
 set ::old_w_leftf 307
 set ::watchlist {
     pin+spindle.0.speed-in
-    pin+lcec.0.4.opmode
     pin+lcec.0.4.in-home
-    pin+lcec.0.0.opmode
-    pin+lcec.0.0.in-home
-    pin+lcec.0.1.opmode
-    pin+lcec.0.4.opmode-display
     pin+lcec.0.4.zpulse
-    pin+lcec.0.4.cia-controlword
-    pin+lcec.0.1.cia-controlword
-    pin+cia402.4.stat-homing
-    pin+cia402.4.statusword
     pin+joint.4.homing
-    pin+joint.1.homing
-    pin+joint.1.homed
-    pin+joint.1.index-enable
+    pin+joint.4.homed
+    pin+joint.4.index-enable
+    pin+iocontrol.0.coolant-flood
     pin+lcec.0.1.zpulse
-    pin+cia402.1.home
-    pin+cia402.1.opmode
-    pin+cia402.1.stat-homing
-    pin+cia402.1.stat-homed
-    pin+cia402.4.opmode-homing
-    pin+cia402.4.stat-homed
-    pin+cia402.0.stat-homing
+    pin+lcec.0.4.opmode
+    pin+mycia402.4.stat-homing
+    pin+mycia402.4.stat-homed
+    pin+mycia402.1.stat-homing
+    pin+mycia402.1.stat-homed
+    pin+mycia402.1.opmode
 }
 set ::workmode watchhal
 set ::watchInterval 100

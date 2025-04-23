@@ -296,7 +296,7 @@
 
 <slave idx="4" type="generic" vid="000001dd" pid="10305070" configPdos="true">
       <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
-      <sdoConfig idx="6098" subIdx="0"><sdoDataRaw data ="02"/></sdoConfig>  <!-- Home mode 2 -->
+      <sdoConfig idx="6098" subIdx="0"><sdoDataRaw data ="02 00"/></sdoConfig>  <!-- Home mode 2 -->
       <sdoConfig idx="214a" subIdx="0"><sdoDataRaw data ="00 01"/></sdoConfig>  <!-- Full-closed Loop Control of Linear Scale -->
       <sdoConfig idx="2149" subIdx="0"><sdoDataRaw data ="30 75"/></sdoConfig>   <!-- Error Protection Range for Full-closed Loop Control -->
       <sdoConfig idx="2001" subIdx="0"><sdoDataRaw data ="00 00"/></sdoConfig>   <!-- Alarm Code Display of Drive -->
@@ -307,12 +307,8 @@
       <sdoConfig idx="212d" subIdx="0"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Gear Ratio (Denominator) (M) -->
       <sdoConfig idx="6093" subIdx="1"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Numerator (Gear Ratio (Numerator) (N1)) -->
       <sdoConfig idx="6093" subIdx="2"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Feed_constant(Gear Ratio (Denominator) (M)) -->
-      <sdoConfig idx="6099" subIdx="1"><sdoDataRaw data ="2c 01"/></sdoConfig>   <!-- Speed during search for switch defualt 100 x64-->
-      <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="20"/></sdoConfig>   <!-- Speed during search for zero default 20 x14-->
-      <sdoConfig idx="2212" subIdx="0"><sdoDataRaw data ="30"/></sdoConfig>   <!-- DO1 Functional Planning -->
-      <sdoConfig idx="2213" subIdx="0"><sdoDataRaw data ="31"/></sdoConfig>   <!-- DO2 Functional Planning -->
-      <sdoConfig idx="2214" subIdx="0"><sdoDataRaw data ="32"/></sdoConfig>   <!-- DO3 Functional Planning -->
-
+      <sdoConfig idx="6099" subIdx="1"><sdoDataRaw data ="F4 01"/></sdoConfig>   <!-- Speed during search for switch defualt 100 x64-->
+      <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="64"/></sdoConfig>   <!-- Speed during search for zero default 20 x14-->
       <syncManager idx="2" dir="out">
         <pdo idx="1600">
           <pdoEntry idx="6040" subIdx="00" bitLen="16" halPin="cia-controlword" halType="u32"/>
