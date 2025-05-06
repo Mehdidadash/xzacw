@@ -146,6 +146,13 @@ net max-x           <= lcec.0.0.CCW-limit
 net max-x => joint.0.pos-lim-sw-in
 
 
+#probe
+
+# Connect probe status to motion digital input
+net probe-trigger <= lcec.0.0.probe-rising-edge-multi => motion.probe-input
+
+
+
 
 #
 # Joint 1

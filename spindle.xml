@@ -275,4 +275,10 @@
     
     
 	</labelframe>
+<hbox>
+    <label text="Variable #80:"/>
+    <number halpin="var80_input" format="+4.4f" font="fixed"/>
+</hbox>
+
+
 </pyvcp>

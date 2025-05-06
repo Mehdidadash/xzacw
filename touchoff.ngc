@@ -1,0 +1,22 @@
+o<touchoff> sub
+(LOGAPPEND,touchlog.txt)
+m5
+g4 p2
+g18 (xz plane)
+g21 (set unit to mm)
+g90
+g64
+g92.1
+g0 w147
+g0 x130
+g0 z-35
+g0 x101.9
+g38.2 x101.2 f10
+G10 L1 P1 X[#5061]
+(DEBUG, #5061 oof)
+(LOG, #5061)
+(LOGCLOSE)
+g0 x130
+g0 z150
+m2
+o<touchoff> endsub

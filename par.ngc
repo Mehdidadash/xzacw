@@ -1,0 +1,5 @@
+o<par> sub
+#1=3
+(DEBUG, #1)
+m2
+o<par> endsub

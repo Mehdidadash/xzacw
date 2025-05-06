@@ -84,3 +84,10 @@ net DO01_02 lcec.0.DO1.dout-2 <= or2.10.out => pyvcp.gripper_jack_output
 #coolant
 #M106 for or2.10.in1 true and M107 for or2.11.in1 False
 net DO01_03 wsum.0.bit.1.in <= or2.11.out => pyvcp.coolant_output
+
+#variables
+# Load the Python handler
+loadusr -W /home/cnc/linuxcnc/configs/xzacw/variables_handler.py
+
+# Connect variables to PyVCP
+net var80-sync pyvcp.var80_input => variables_handler.var80
