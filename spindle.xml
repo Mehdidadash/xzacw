@@ -276,9 +276,12 @@
     
 	</labelframe>
 <hbox>
-    <label text="Variable #80:"/>
-    <number halpin="var80_input" format="+4.4f" font="fixed"/>
+    <label text="Wheel Wear Compensation (wearc):" />
+    <number halpin="wearc_display" format="+4.4f" font="fixed" />
 </hbox>
-
+<hbox>
+    <label text="Part Count:" />
+    <number halpin="partcount_display" format="+4.4f" font="fixed" />
+</hbox>
 
 </pyvcp>

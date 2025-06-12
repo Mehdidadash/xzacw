@@ -1,22 +1,28 @@
-o<touchoff> sub
 (LOGAPPEND,touchlog.txt)
 m5
+M66 E0 L0 (dummy m66 to force sync hal pins)
+M114
+M115
+#72=#<_hal[pyvcp.wearc_display]>
+#77=#<_hal[pyvcp.partcount_display]>
 g4 p2
 g18 (xz plane)
 g21 (set unit to mm)
 g90
 g64
 g92.1
+g92.1 g0 x118
 g0 w147
-g0 x130
-g0 z-35
-g0 x101.9
-g38.2 x101.2 f10
+g0 x118
+g0 z-39
+g0 x103
+g38.2 x102 f10
 G10 L1 P1 X[#5061]
+M66 E0 L0 (dummy m66 to force sync hal pins)
 (DEBUG, #5061 oof)
-(LOG, #5061)
+(DEBUG, #72 wearc)
+(LOG, #5061 , wearc is #72 , partcount is #77)
 (LOGCLOSE)
-g0 x130
+g0 x118
 g0 z150
 m2
-o<touchoff> endsub

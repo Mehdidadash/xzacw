@@ -1,52 +1,54 @@
 #!/usr/bin/env python3
-import time
 import hal
-import os
-import re
+import time
 
-h = hal.component("variables_handler")
-h.newpin("var80", hal.HAL_FLOAT, hal.HAL_IO)  # Changed from OUT to IO
-h.newpin("var81", hal.HAL_FLOAT, hal.HAL_IO)  # Changed from IN to IO
-h.ready()
+FILE_PATH = '/home/cnc/linuxcnc/configs/xzacw/variables.txt'
 
-vars_path = os.path.expanduser("~/linuxcnc/configs/xzacw/variables.txt")
+def read_values():
+    try:
+        with open(FILE_PATH, 'r') as f:
+            lines = f.readlines()
+            values = {}
+            for line in lines:
+                key, value = line.strip().split('=')
+                values[key] = float(value)
+            return values
+    except Exception as e:
+        print(f"Failed to read file: {e}")
+        return {"wearc": 0.0, "partcount": 0.0}
 
-def read_var(number):
-    with open(vars_path, 'r') as f:
-        for line in f:
-            match = re.match(rf"#\s*{number}\s*=\s*(-?\d+(?:\.\d+)?)", line)
-            if match:
-                return float(match.group(1))
-    return 0.0
+def write_values(values):
+    try:
+        with open(FILE_PATH, 'w') as f:
+            for key, value in values.items():
+                f.write(f"{key}={value}\n")
+    except Exception as e:
+        print(f"Failed to write file: {e}")
 
-def write_var(number, value):
-    with open(vars_path, 'r') as f:
-        lines = f.readlines()
-    updated = False
-    with open(vars_path, 'w') as f:
-        for line in lines:
-            if line.strip().startswith(f"#{number}="):
-                f.write(f"#{number}={int(value)}\n")
-                updated = True
-            else:
-                f.write(line)
-        if not updated:
-            f.write(f"#{number}={int(value)}\n")
+def main():
+    h = hal.component("variables_handler")
+    h.newpin("wearc", hal.HAL_FLOAT, hal.HAL_IN)
+    h.newpin("partcount", hal.HAL_FLOAT, hal.HAL_IN)
+    h.ready()
 
-while True:
-    # Read latest values from file
-    file_80 = read_var(80)
-    file_81 = read_var(81)
+    values = read_values()
+    h['wearc'] = values.get("wearc", 0.0)
+    h['partcount'] = values.get("partcount", 0.0)
 
-    # Sync HAL input to file (if user changed it externally)
-    if abs(file_80 - h['var80']) > 0.01:
-        h['var80'] = file_80
-    else:
-        write_var(80, h['var80'])
+    print(f"Initialized variables: wearc={h['wearc']}, partcount={h['partcount']}")
 
-    if abs(file_81 - h['var81']) > 0.01:
-        h['var81'] = file_81
-    else:
-        write_var(81, h['var81'])
+    try:
+        prev_values = values.copy()
+        while True:
+            values["wearc"] = h['wearc']
+            values["partcount"] = h['partcount']
+            if values != prev_values:
+                write_values(values)
+                prev_values = values.copy()
+            time.sleep(1)
 
-    time.sleep(0.1)
+    except KeyboardInterrupt:
+        pass
+
+if __name__ == '__main__':
+    main()

@@ -1,3 +1,13 @@
-(DEBUG, #80)
-g1 g93 x[#80] f1
-m2 m5
+(DEBUG, Initial value wearc: #<_hal[variables_handler.wearc]>)
+#80 = 2
+M112 P#80
+g4 p2
+M66 E0 L0
+(DEBUG, Updated value wearc: #<_hal[variables_handler.wearc]>)
+(DEBUG, Initial value partcount: #<_hal[variables_handler.partcount]>)
+#81 = 5000
+M113 P#81
+g4 p2
+M66 E0 L0
+(DEBUG, Updated value partcount: #<_hal[variables_handler.partcount]>)
+m2

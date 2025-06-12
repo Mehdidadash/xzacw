@@ -17,7 +17,7 @@
       <sdoConfig idx="6093" subIdx="2"><sdoDataRaw data ="01 00"/></sdoConfig>   <!-- Feed_constant(Gear Ratio (Denominator) (M)) -->
       <sdoConfig idx="6099" subIdx="1"><sdoDataRaw data ="F4 01"/></sdoConfig>   <!-- Speed during search for switch -->
       <sdoConfig idx="6099" subIdx="2"><sdoDataRaw data ="64"/></sdoConfig>   <!-- Speed during search for zero -->
-      <sdoConfig idx="60B8" subIdx="0"><sdoDataRaw data ="33 00"/></sdoConfig>   <!-- prob -->
+      <sdoConfig idx="60B8" subIdx="0"><sdoDataRaw data ="33 00"/></sdoConfig>   <!-- probe setting -->
 
       <syncManager idx="2" dir="out">
         <pdo idx="1600">
@@ -48,7 +48,7 @@
           <!-- <pdoEntry idx="60F4" subIdx="00" bitLen="32" halPin="following-error" halType="s32"/> -->
           <!-- <pdoEntry idx="2511" subIdx="00" bitLen="32" halPin="auxilary-encoder" halType="s32"/> -->
           <pdoEntry idx="606C" subIdx="00" bitLen="32" halPin="actual-velocity" halType="s32"/>
-          <pdoEntry idx="60B9" subIdx="0" bitLen="16" halType="complex">
+          <pdoEntry idx="60B9" subIdx="0" bitLen="16" halType="complex"> 
             <complexEntry bitLen="1" halPin="probe-enabled" halType="bit"/>
             <complexEntry bitLen="1" halPin="probe-rising-edge" halType="bit"/>
             <complexEntry bitLen="1" halPin="probe-falling-edge" halType="bit"/>

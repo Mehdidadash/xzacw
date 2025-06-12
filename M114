@@ -1,0 +1,25 @@
+#!/bin/bash
+# M114 - Read wearc from variables.txt and update pyvcp.wearc_display
+
+# Set path to variables.txt
+VARS_FILE="/home/cnc/linuxcnc/configs/xzacw/variables.txt"
+
+# Extract wearc value using grep and cut
+wearc=$(grep "^wearc=" "$VARS_FILE" | cut -d '=' -f 2)
+
+# Validate extraction
+if [ -z "$wearc" ]; then
+  echo "Error: Failed to read wearc from variables.txt"
+  exit 1
+fi
+
+# Unlink HAL pin from signal
+halcmd unlinkp pyvcp.wearc_display
+
+# Set the HAL pin value
+halcmd setp pyvcp.wearc_display "$wearc"
+
+# Reconnect the pin to its signal (if necessary)
+halcmd net wearc-sync pyvcp.wearc_display
+
+exit 0

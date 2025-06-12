@@ -5,47 +5,52 @@ g64
 g92.1
 #70=2(count of files)
 #71=0 (iritation parameter)
-#72=#80  (x touch place last time: .31)
-#73=.75
+M66 E0 L0 (dummy m66 to force sync hal pins)
+M114
+M115
+#72=#<_hal[pyvcp.wearc_display]> (x touch place last time: .065)
+#73=14.5
 #74=[#73+.6-#72] (start point)
-#75=0.0024 (wheel wear per part)
+#75=0.01 (wheel wear per part)
 #76=30 (total length of the part)
+#77=#<_hal[pyvcp.partcount_display]> (read count of parts)
+M66 E0 L0 (dummy m66 to force sync hal pins)
 #2=1 (radial multipication)
 #3=0(radial offset)
 #4=2 (grinding feed override)
 #5=2 (other ops feed override)
 o110 while [#71 LT #70]
-(#80=0 the variable that i want to read)
+
 #74=[#73+.6-#72]
 
 g0 x[#73+6]
-g93 g01 z72 a0 w53 f[#5*15] (decrease wasted material by 20mm)
+g93 g01 z72 a0 w57.5 f[#5*15] (decrease wasted material by 20mm)
 g0 x[#73]
 g92 x[#74] z0 a0 c0 w0
 M103
 m3 s3500
 g4 p5
-m107 (coolant)
+(m107 coolant)
 g92 c0
-#7=0.27400
+#7=0.28902
 #8=16
 #9=0.00000
-#10=226.14718
+#10=53.12241
 g93 x.65 a[#9] f[#5*60]
 g94 g01 x[#7*#2+#3] z0 f[#5*2]
-o<f2_v02_2025-04-30> call [1*#4] [#2] [#3]
+o<f1_v06_2025-05-24> call [.8*#4] [#2] [#3]
 g94 g01 x1 f[#5*60]
 g92 c[#10]
 g93 g01 x.65  z0 a[#9] c120 f[#5*60]
 g94 g01 x[#7*#2+#3] z0 f[#5*2]
 g92 c0
-o<f2_v02_2025-04-30> call [1.2*#4] [#2] [#3]
+o<f1_v06_2025-05-24> call [1*#4] [#2] [#3]
 g94 g01 x1 f[#5*60]
 g92 c[#10]
 g93 g01 x.65  z0 a[#9] c120 f[#5*60]
 g94 g01 x[#7*#2+#3] z0 f[#5*2]
 g92 c0
-o<f2_v02_2025-04-30> call [1.5*#4] [#2] [#3]
+o<f1_v06_2025-05-24> call [1.2*#4] [#2] [#3]
 g92 c0
 (g93 x.6 a0 f[#5*6])
 (g93 g01 x.4 z17 c3600 f[#5*2])
@@ -54,13 +59,13 @@ g92 c0
 (g94 g01 x6 z16 f[#5*120])
 (g93 g01 z16.1 c-3600 f[#5*4])
 g94 g01 x.3 c-360 f[#5*4] ()
-g94 g01 x.6 z16.6 c-10800 f[#5*2]
-g94 g01 x.6 z16.7 c-11160 f[#5*10]
-g94 g01 z16.45 f[#5*10]
-g94 g01 x.4 c-9000 f[#5*3]
-g93 g01 x-.45 c-3600 f[#5*4]
-
-g01 x16 a0 c0 f[#5*20]
+g94 g01 x.6 z17 c-1080 f[#5*2]
+g94 g01 x.6 z17.1 c-1116 f[#5*10]
+g94 g01 z17 f[#5*10]
+g94 g01 x.4 c1040 f[#5*3]
+g93 g01 x-.45 c5400 f[#5*4]
+g93 g01 x0 z16 c9000 f[#5*4]
+g01 x16 a0 f[#5*20]
 m108
 g0 z16
 M105
@@ -89,7 +94,11 @@ g92.1
 g93 g01 z72 a0 f[#5*9]
 m106
 #72=[#72-#75]
+M112 P#72
+M113 P[#77+1]
+M114
+M115
 #71=[#71+1]
-#81=#71 (variable that i want to write)
+M66 E0 L0 (dummy m66 to force sync hal pins)
 o110 endwhile
 M2 M5 (end program)
