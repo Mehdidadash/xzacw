@@ -30,7 +30,7 @@ set ::watchlist {
     pin+lcec.0.DO1.dout-1
     pin+lcec.0.DO1.dout-0
 }
-set ::workmode watchhal
+set ::workmode showhal
 set ::watchInterval 100
 set ::col1_width 100
 set ::ffmts 
