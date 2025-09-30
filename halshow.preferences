@@ -1,6 +1,6 @@
 # Halshow settings
 # This file is generated automatically.
-wm geometry . 960x1093+793+0
+wm geometry . 960x1093+879+0
 placeFrames 0.44622093023255816
 set ::ratio 0.44622093023255816
 set ::old_w_leftf 307
@@ -29,8 +29,14 @@ set ::watchlist {
     pin+lcec.0.DO1.dout-2
     pin+lcec.0.DO1.dout-1
     pin+lcec.0.DO1.dout-0
+    pin+lcec.0.3.actual-position
+    pin+mycia402.3.drv-target-position
+    pin+lcec.0.3.target-position
+    pin+mycia402.3.drv-actual-position
+    pin+mycia402.3.pos-fb
+    pin+mycia402.3.pos-cmd
 }
-set ::workmode showhal
+set ::workmode watchhal
 set ::watchInterval 100
 set ::col1_width 100
 set ::ffmts 

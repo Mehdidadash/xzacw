@@ -300,7 +300,6 @@ FUNCTION(write_all) {
   if (home && homing_delay_timer <= 0) {
     // Homing mode activation
     opmode = OPMODE_HOMING;
-    debug_opmode_write = opmode;
     controlword |= (1 << 4);  // Set homing start bit (bit 4)
     
     // Clear previous operation mode bits

@@ -246,7 +246,6 @@ net max-a => joint.2.pos-lim-sw-in
 setp mycia402.3.csp-mode 1
 setp mycia402.3.velo-scale 360
 setp mycia402.3.pos-scale -4847.727272
-
 #modification
 
 

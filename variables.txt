@@ -1,2 +1,2 @@
-wearc=0.708000
-partcount=25.000000
+wearc=0.580000
+partcount=7.000000
