@@ -4,7 +4,7 @@ g21 (set unit to mm)
 g90
 g64
 g92.1
-#70=30(count of files)
+#70=5(count of files)
 #71=0 (iritation parameter)
 M66 E0 L0 (dummy m66 to force sync hal pins)
 M114
@@ -14,8 +14,8 @@ m105
 #72=#<_hal[pyvcp.wearc_display]> (x touch place last time: .065)
 #73= 6 (x start and retreat point)
 #74=[#73+.6-#72] (wear compensation)
-#75=0.0006 (wheel wear per part sx 0.0004 s1 0.0008 s2 0.00075 f1 0.0006 f2 0.0005 f3 0.0004)
-#76=30 (total length of the part)
+#75=0.00045 (wheel wear per part)
+#76=26 (total length of the part)
 #77=#<_hal[pyvcp.partcount_display]> (read count of parts)
 M66 E0 L0 (dummy m66 to force sync hal pins)
 #2=1 (radial multipication)
@@ -29,7 +29,7 @@ M66 E0 L0 (dummy m66 to force sync hal pins)
 o110 while [#71 LT #70]
 #74=[#73+.6-#72]
 g0 x[#73]
-g94 g1 z63 w65.5 f[#6*10] (decrease wasted material by 20mm)
+g94 g1 z68 w65.5 f[#6*10] (decrease wasted material by 20mm)
 g92 x[#74] z0 c0 w0
 M103
 m3 s3000
@@ -40,7 +40,7 @@ g0 x1
 o111 while [#78 LE #80] (first iteration)
 o112 while [#79 LE 3] (first iteration)
 #4=[#4+1] (update grinding feed override dynamically before calling the subroutine)
-o<s1> call [#4] [#78] [#79] [#6] [#80]
+o<sx> call [#4] [#78] [#79] [#6] [#80]
 #79=[#79+1]
 o112 endwhile
 #78=[#78+1]
@@ -61,7 +61,7 @@ m102
 g4 p1
 
 g92.1
-g90 g0 z63 c0
+g90 g0 z68 c0
 #72=[#72-#75]
 M112 P#72
 #77=[#77+1]

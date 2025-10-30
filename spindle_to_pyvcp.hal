@@ -15,8 +15,6 @@ net x-max => pyvcp.x-max
 net x-min => pyvcp.x-min
 net z-max => pyvcp.z-max
 net z-min => pyvcp.z-min
-net a-max => pyvcp.a-max
-net a-min => pyvcp.a-min
 net c-max => pyvcp.c-max
 net c-min => pyvcp.c-min
 

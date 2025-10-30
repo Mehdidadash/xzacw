@@ -69,46 +69,38 @@ net pdnt.mode.is-teleop                   halui.mode.is-teleop                  
 # "is-homed" axis signal for allowing pendant when machine is not homed
 net pdnt.axis.X.is-homed                  halui.joint.0.is-homed                whb.halui.joint.x.is-homed
 net pdnt.axis.Z.is-homed                  halui.joint.1.is-homed                whb.halui.joint.z.is-homed
-net pdnt.axis.A.is-homed                  halui.joint.2.is-homed                whb.halui.joint.a.is-homed
-net pdnt.axis.C.is-homed                  halui.joint.3.is-homed                whb.halui.joint.c.is-homed
+net pdnt.axis.C.is-homed                  halui.joint.2.is-homed                whb.halui.joint.c.is-homed
 
 # "selected axis" signals
 net pdnt.axis.X.select                    whb.halui.axis.x.select               halui.axis.x.select
 net pdnt.axis.Z.select                    whb.halui.axis.z.select               halui.axis.z.select
-net pdnt.axis.A.select                    whb.halui.axis.a.select               halui.axis.a.select
 net pdnt.axis.C.select                    whb.halui.axis.c.select               halui.axis.c.select
 
 # Axis position related signals feedback
 net pdnt.axis.x.pos-feedback              halui.axis.x.pos-feedback             whb.halui.axis.x.pos-feedback
 net pdnt.axis.z.pos-feedback              halui.axis.z.pos-feedback             whb.halui.axis.z.pos-feedback
-net pdnt.axis.a.pos-feedback              halui.axis.a.pos-feedback             whb.halui.axis.a.pos-feedback
 net pdnt.axis.c.pos-feedback              halui.axis.c.pos-feedback             whb.halui.axis.c.pos-feedback
 
 # Axis position related signals relative
 net pdnt.axis.x.pos-relative              halui.axis.x.pos-relative             whb.halui.axis.x.pos-relative
 net pdnt.axis.z.pos-relative              halui.axis.z.pos-relative             whb.halui.axis.z.pos-relative
-net pdnt.axis.a.pos-relative              halui.axis.a.pos-relative             whb.halui.axis.a.pos-relative
 net pdnt.axis.c.pos-relative              halui.axis.c.pos-relative             whb.halui.axis.c.pos-relative
 
 # Axis jog signals
 net pdnt.axis.x.jog-scale                 whb.axis.x.jog-scale                  axis.x.jog-scale
 net pdnt.axis.z.jog-scale                 whb.axis.z.jog-scale                  axis.z.jog-scale
-net pdnt.axis.a.jog-scale                 whb.axis.a.jog-scale                  axis.a.jog-scale
 net pdnt.axis.c.jog-scale                 whb.axis.c.jog-scale                  axis.c.jog-scale
 
 net pdnt.axis.x.jog-counts                whb.axis.x.jog-counts                 axis.x.jog-counts
 net pdnt.axis.z.jog-counts                whb.axis.z.jog-counts                 axis.z.jog-counts
-net pdnt.axis.a.jog-counts                whb.axis.a.jog-counts                 axis.a.jog-counts
 net pdnt.axis.c.jog-counts                whb.axis.c.jog-counts                 axis.c.jog-counts
 
 net pdnt.axis.x.jog-enable                whb.axis.x.jog-enable                 axis.x.jog-enable
 net pdnt.axis.z.jog-enable                whb.axis.z.jog-enable                 axis.z.jog-enable
-net pdnt.axis.a.jog-enable                whb.axis.a.jog-enable                 axis.a.jog-enable
 net pdnt.axis.c.jog-enable                whb.axis.c.jog-enable                 axis.c.jog-enable
 
 net pdnt.axis.x.jog-vel-mode              whb.axis.x.jog-vel-mode               axis.x.jog-vel-mode
 net pdnt.axis.z.jog-vel-mode              whb.axis.z.jog-vel-mode               axis.z.jog-vel-mode
-net pdnt.axis.a.jog-vel-mode              whb.axis.a.jog-vel-mode               axis.a.jog-vel-mode
 net pdnt.axis.c.jog-vel-mode              whb.axis.c.jog-vel-mode               axis.c.jog-vel-mode
 
 
@@ -212,4 +204,4 @@ net pdnt.axis.y.jog-enable                whb.axis.y.jog-enable                 
 net pdnt.axis.y.pos-feedback              halui.axis.w.pos-feedback             whb.halui.axis.y.pos-feedback
 net pdnt.axis.y.pos-relative              halui.axis.w.pos-relative             whb.halui.axis.y.pos-relative
 net pdnt.axis.y.select                    whb.halui.axis.y.select               halui.axis.w.select
-net pdnt.axis.y.is-homed                  halui.joint.4.is-homed                whb.halui.joint.y.is-homed
+net pdnt.axis.y.is-homed                  halui.joint.3.is-homed                whb.halui.joint.y.is-homed

@@ -6,16 +6,8 @@ set ::ratio 0.44622093023255816
 set ::old_w_leftf 307
 set ::watchlist {
     pin+spindle.0.speed-in
-    pin+lcec.0.4.in-home
-    pin+lcec.0.4.zpulse
-    pin+joint.4.homing
-    pin+joint.4.homed
-    pin+joint.4.index-enable
     pin+iocontrol.0.coolant-flood
     pin+lcec.0.1.zpulse
-    pin+lcec.0.4.opmode
-    pin+mycia402.4.stat-homing
-    pin+mycia402.4.stat-homed
     pin+mycia402.1.stat-homing
     pin+mycia402.1.stat-homed
     pin+mycia402.1.opmode

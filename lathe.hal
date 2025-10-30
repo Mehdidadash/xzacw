@@ -13,8 +13,8 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JO
 
 loadusr -W lcec_conf ethercat-conf.xml
 loadrt lcec
-loadrt mycia402 count=5
-loadrt pid names=pid.x,pid.z,pid.a,pid.c,pid.w debug=1
+loadrt mycia402 count=4
+loadrt pid names=pid.x,pid.z,pid.c,pid.w debug=1
 #loadrt classicladder_rt --modmaster
 
 ###########################################################
@@ -27,14 +27,12 @@ addf mycia402.0.read-all servo-thread
 addf mycia402.1.read-all servo-thread
 addf mycia402.2.read-all servo-thread
 addf mycia402.3.read-all servo-thread
-addf mycia402.4.read-all servo-thread
 
 addf motion-command-handler servo-thread
 addf motion-controller servo-thread
 #addf s-pid.do-pid-calcs servo-thread
 addf pid.x.do-pid-calcs servo-thread
 addf pid.z.do-pid-calcs servo-thread
-addf pid.a.do-pid-calcs servo-thread
 addf pid.c.do-pid-calcs servo-thread
 addf pid.w.do-pid-calcs servo-thread
 
@@ -44,7 +42,6 @@ addf mycia402.0.write-all servo-thread
 addf mycia402.1.write-all servo-thread
 addf mycia402.2.write-all servo-thread
 addf mycia402.3.write-all servo-thread
-addf mycia402.4.write-all servo-thread
 addf lcec.write-all servo-thread
 
 
@@ -198,35 +195,36 @@ net min-z => joint.1.neg-lim-sw-in
 net max-z           <= lcec.0.1.CCW-limit
 net max-z => joint.1.pos-lim-sw-in
 #
+
+
 # Joint 2
 #
 setp mycia402.2.csp-mode 1
-# setp mycia402.2.velo-scale 3.60 #"velocity in machine units per 1 Motor revolution";
-setp mycia402.2.pos-scale -355500 #"increments per machine unit";
-
+setp mycia402.2.velo-scale 360
+setp mycia402.2.pos-scale -4847.727272
 #modification
 
 
 #from servo(ethercat) to mycia402
-net a-statusword      lcec.0.2.cia-statusword => mycia402.2.statusword
-net a-opmode-display  lcec.0.2.opmode-display => mycia402.2.opmode-display
-net a-drv-act-pos     lcec.0.2.actual-position => mycia402.2.drv-actual-position
-net a-drv-act-velo    lcec.0.2.actual-velocity => mycia402.2.drv-actual-velocity
+net c-statusword      lcec.0.2.cia-statusword => mycia402.2.statusword
+net c-opmode-display  lcec.0.2.opmode-display => mycia402.2.opmode-display
+net c-drv-act-pos     lcec.0.2.actual-position => mycia402.2.drv-actual-position
+net c-drv-act-velo    lcec.0.2.actual-velocity => mycia402.2.drv-actual-velocity
 
 #from motion to cia
 
-net a-home-index <= joint.2.index-enable  => mycia402.2.home
-net a-enable     <= joint.2.amp-enable-out => mycia402.2.enable
-net a-amp-fault  => joint.2.amp-fault-in   <= mycia402.2.drv-fault
-net a-pos-cmd    <= joint.2.motor-pos-cmd  => mycia402.2.pos-cmd
-net a-pos-fb     => joint.2.motor-pos-fb   <= mycia402.2.pos-fb
-#net a-home          lcec.0.2.in-5          => joint.2.home-sw-in
+net c-home-index <= joint.2.index-enable  => mycia402.2.home
+net c-enable     <= joint.2.amp-enable-out => mycia402.2.enable
+net c-amp-fault  => joint.2.amp-fault-in   <= mycia402.2.drv-fault
+net c-pos-cmd    <= joint.2.motor-pos-cmd  => mycia402.2.pos-cmd
+net c-pos-fb     => joint.2.motor-pos-fb   <= mycia402.2.pos-fb
+#net c-home          lcec.0.2.in-5          => joint.2.home-sw-in
 
 #from mycia402 to servo(ethercat)
-net a-controlword         mycia402.2.controlword => lcec.0.2.cia-controlword
-net a-modes-of-operation  mycia402.2.opmode => lcec.0.2.opmode
-net a-drv-target-pos      mycia402.2.drv-target-position => lcec.0.2.target-position
-net a-drv-target-velo     mycia402.2.drv-target-velocity => lcec.0.2.target-velocity
+net c-controlword         mycia402.2.controlword => lcec.0.2.cia-controlword
+net c-modes-of-operation  mycia402.2.opmode => lcec.0.2.opmode
+net c-drv-target-pos      mycia402.2.drv-target-position => lcec.0.2.target-position
+net c-drv-target-velo     mycia402.2.drv-target-velocity => lcec.0.2.target-velocity
 
 #modifications
 
@@ -235,83 +233,41 @@ net a-drv-target-velo     mycia402.2.drv-target-velocity => lcec.0.2.target-velo
 # axis interface
 
 
-net min-a            <= lcec.0.2.CW-limit
-net min-a   => joint.2.neg-lim-sw-in
-
-net max-a <= lcec.0.2.CCW-limit
-net max-a => joint.2.pos-lim-sw-in
+net min-c           <= lcec.0.2.CW-limit
+net min-c => joint.2.neg-lim-sw-in
+net max-c           <= lcec.0.2.CCW-limit
+net max-c => joint.2.pos-lim-sw-in
 
 # Joint 3
 #
 setp mycia402.3.csp-mode 1
-setp mycia402.3.velo-scale 360
-setp mycia402.3.pos-scale -4847.727272
-#modification
-
-
-#from servo(ethercat) to mycia402
-net c-statusword      lcec.0.3.cia-statusword => mycia402.3.statusword
-net c-opmode-display  lcec.0.3.opmode-display => mycia402.3.opmode-display
-net c-drv-act-pos     lcec.0.3.actual-position => mycia402.3.drv-actual-position
-net c-drv-act-velo    lcec.0.3.actual-velocity => mycia402.3.drv-actual-velocity
-
-#from motion to cia
-
-net c-home-index <= joint.3.index-enable  => mycia402.3.home
-net c-enable     <= joint.3.amp-enable-out => mycia402.3.enable
-net c-amp-fault  => joint.3.amp-fault-in   <= mycia402.3.drv-fault
-net c-pos-cmd    <= joint.3.motor-pos-cmd  => mycia402.3.pos-cmd
-net c-pos-fb     => joint.3.motor-pos-fb   <= mycia402.3.pos-fb
-#net c-home          lcec.0.3.in-5          => joint.3.home-sw-in
-
-#from mycia402 to servo(ethercat)
-net c-controlword         mycia402.3.controlword => lcec.0.3.cia-controlword
-net c-modes-of-operation  mycia402.3.opmode => lcec.0.3.opmode
-net c-drv-target-pos      mycia402.3.drv-target-position => lcec.0.3.target-position
-net c-drv-target-velo     mycia402.3.drv-target-velocity => lcec.0.3.target-velocity
-
-#modifications
-
-
-
-# axis interface
-
-
-net min-c           <= lcec.0.3.CW-limit
-net min-c => joint.3.neg-lim-sw-in
-net max-c           <= lcec.0.3.CCW-limit
-net max-c => joint.3.pos-lim-sw-in
-
-# Joint 4
-#
-setp mycia402.4.csp-mode 1
-# setp mycia402.4.velo-scale 5
-setp mycia402.4.pos-scale 256000
-setp mycia402.4.homing-delay-ns 8000000000  # 8 seconds
+# setp mycia402.3.velo-scale 5
+setp mycia402.3.pos-scale 256000
+setp mycia402.3.homing-delay-ns 8000000000  # 8 seconds
 
 #modification
 
 #from servo(ethercat) to mycia402
-net w-statusword      lcec.0.4.cia-statusword => mycia402.4.statusword
-net w-opmode-display  lcec.0.4.opmode-display => mycia402.4.opmode-display
-net w-drv-act-pos     lcec.0.4.actual-position => mycia402.4.drv-actual-position
-net w-drv-act-velo    lcec.0.4.actual-velocity => mycia402.4.drv-actual-velocity
+net w-statusword      lcec.0.3.cia-statusword => mycia402.3.statusword
+net w-opmode-display  lcec.0.3.opmode-display => mycia402.3.opmode-display
+net w-drv-act-pos     lcec.0.3.actual-position => mycia402.3.drv-actual-position
+net w-drv-act-velo    lcec.0.3.actual-velocity => mycia402.3.drv-actual-velocity
 
 
 #from mycia402 to servo(ethercat)
-net w-controlword         mycia402.4.controlword => lcec.0.4.cia-controlword
-net w-modes-of-operation  mycia402.4.opmode => lcec.0.4.opmode
-net w-drv-target-pos      mycia402.4.drv-target-position => lcec.0.4.target-position
-net w-drv-target-velo     mycia402.4.drv-target-velocity => lcec.0.4.target-velocity
+net w-controlword         mycia402.3.controlword => lcec.0.3.cia-controlword
+net w-modes-of-operation  mycia402.3.opmode => lcec.0.3.opmode
+net w-drv-target-pos      mycia402.3.drv-target-position => lcec.0.3.target-position
+net w-drv-target-velo     mycia402.3.drv-target-velocity => lcec.0.3.target-velocity
 
 
 #from motion to cia
 
-net w-home-index <= joint.4.index-enable  => mycia402.4.home
-net w-enable     <= joint.4.amp-enable-out => mycia402.4.enable
-net w-amp-fault  => joint.4.amp-fault-in   <= mycia402.4.drv-fault
-net w-pos-cmd    <= joint.4.motor-pos-cmd  => mycia402.4.pos-cmd
-net w-pos-fb     => joint.4.motor-pos-fb   <= mycia402.4.pos-fb
+net w-home-index <= joint.3.index-enable  => mycia402.3.home
+net w-enable     <= joint.3.amp-enable-out => mycia402.3.enable
+net w-amp-fault  => joint.3.amp-fault-in   <= mycia402.3.drv-fault
+net w-pos-cmd    <= joint.3.motor-pos-cmd  => mycia402.3.pos-cmd
+net w-pos-fb     => joint.3.motor-pos-fb   <= mycia402.3.pos-fb
 #modifications
 
 
@@ -320,10 +276,10 @@ net w-pos-fb     => joint.4.motor-pos-fb   <= mycia402.4.pos-fb
 
 
 
-net min-w           <= lcec.0.4.CW-limit
-net min-w => joint.4.neg-lim-sw-in
-net max-w           <= lcec.0.4.CCW-limit
-net max-w => joint.4.pos-lim-sw-in
+net min-w           <= lcec.0.3.CW-limit
+net min-w => joint.3.neg-lim-sw-in
+net max-w           <= lcec.0.3.CCW-limit
+net max-w => joint.3.pos-lim-sw-in
 #
 #loadusr classicladder
 
@@ -340,6 +296,7 @@ net spindle-speed-cmd spindle.0.speed-out-rps-abs => mult2.0.in1
 net Frequency_command mb2hal.Frequency_command.00 <= mult2.0.out
 net spindle-rpm spindle.0.speed-in <= mb2hal.Motor_actual_speed.00.float
 net S-on spindle.0.on => or2.12.in0 => and2.0.in0
+net spindle-at-speed spindle.0.at-speed
 net S-fwd and2.0.in1 <= spindle.0.forward
 net S-on and2.1.in0 
 net S-rev and2.1.in1 <= spindle.0.reverse
