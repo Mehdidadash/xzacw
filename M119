@@ -1,0 +1,31 @@
+#!/bin/bash
+# M119: Enable/disable tables
+# Usage: M119 P<0|1> where 0=disable, 1=enable
+
+# Check if parameter is provided
+if [ $# -lt 1 ]; then
+  echo "Error: M119 requires P parameter (0=disable, 1=enable)" >&2
+  exit 1
+fi
+
+# Convert parameter to integer
+P_VAL=$(printf "%.0f" "$1")
+
+if [ "$P_VAL" -eq 0 ]; then
+  echo "M119: Disabling tables"
+  halcmd setp gladevcp.table_1 0
+  halcmd setp gladevcp.table_7 0
+  halcmd setp gladevcp.table_8 0
+  echo "Tables disabled"
+elif [ "$P_VAL" -eq 1 ]; then
+  echo "M119: Enabling tables" 
+  halcmd setp gladevcp.table_1 1
+  halcmd setp gladevcp.table_7 1
+  halcmd setp gladevcp.table_8 1
+  echo "Tables enabled"
+else
+  echo "Error: M119 P parameter must be 0 or 1" >&2
+  exit 1
+fi
+
+exit 0

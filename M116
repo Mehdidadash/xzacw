@@ -1,0 +1,25 @@
+#!/bin/bash
+# M116: update serie_machined
+
+if [ -z "$1" ]; then
+  echo "Error: No parameter provided."
+  exit 1
+fi
+
+new_count=$1
+new_count=${new_count%.*}  # Remove decimal part to ensure integer
+
+# Unlink the pin from its signal
+halcmd unlinkp gladevcp.serie_machined_display
+
+# Set the HAL pin value
+halcmd setp gladevcp.serie_machined_display "$new_count"
+
+# Reconnect the pin to its signal
+halcmd net serie-machined-sync gladevcp.serie_machined_display
+
+# Update variables.txt
+sed -i "s/^serie_machined=.*/serie_machined=$new_count/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
+
+echo "M116: Updated serie_machined to $new_count"
+exit 0

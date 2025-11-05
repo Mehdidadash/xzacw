@@ -11,12 +11,12 @@ M114
 M115
 M66 E0 L0 (dummy m66 to force sync hal pins)
 m105
-#72=#<_hal[pyvcp.wearc_display]> (x touch place last time: .065)
+#72=#<_hal[gladevcp.touchoff_display]> (x touch place last time: .065)
 #73= 6 (x start and retreat point)
 #74=[#73+.6-#72] (wear compensation)
 #75=0.00045 (wheel wear per part)
 #76=26 (total length of the part)
-#77=#<_hal[pyvcp.partcount_display]> (read count of parts)
+#77=#<_hal[gladevcp.total_machined]> (read count of parts)
 M66 E0 L0 (dummy m66 to force sync hal pins)
 #2=1 (radial multipication)
 #3=0(radial offset)

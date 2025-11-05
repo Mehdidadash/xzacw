@@ -1,25 +1,24 @@
 #!/bin/bash
-# M11 - Read partcount from variables.txt and update pyvcp.partcount_display
+# M115: update total_machined from variables.txt
 
-# Set path to variables.txt
 VARS_FILE="/home/cnc/linuxcnc/configs/xzacw/variables.txt"
+total=$(grep "^total_machined=" "$VARS_FILE" | cut -d '=' -f 2)
 
-# Extract partcount value using grep and cut
-partcount=$(grep "^partcount=" "$VARS_FILE" | cut -d '=' -f 2)
-
-# Validate extraction
-if [ -z "$partcount" ]; then
-  echo "Error: Failed to read partcount from variables.txt"
+if [ -z "$total" ]; then
+  echo "Error: Failed to read total_machined from variables.txt"
   exit 1
 fi
 
+total=${total%.*}  # Remove decimal part to ensure integer
+
 # Unlink HAL pin from signal
-halcmd unlinkp pyvcp.partcount_display
+halcmd unlinkp gladevcp.total_machined
 
 # Set the HAL pin value
-halcmd setp pyvcp.partcount_display "$partcount"
+halcmd setp gladevcp.total_machined "$total"
 
-# Reconnect the pin to its signal (if necessary)
-halcmd net partcount-sync pyvcp.partcount_display
+# Reconnect the pin to its signal
+halcmd net total-machined-sync gladevcp.total_machined
 
+echo "M115: Initialized total_machined to $total from variables.txt"
 exit 0

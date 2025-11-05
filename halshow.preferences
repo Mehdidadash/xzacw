@@ -1,6 +1,6 @@
 # Halshow settings
 # This file is generated automatically.
-wm geometry . 960x1093+879+0
+wm geometry . 960x1093+0+0
 placeFrames 0.44622093023255816
 set ::ratio 0.44622093023255816
 set ::old_w_leftf 307
@@ -15,8 +15,6 @@ set ::watchlist {
     pin+lcec.0.0.probe-rising-edge-multi
     pin+lcec.0.0.probe-rising-edge
     pin+lcec.0.0.probe-enabled
-    pin+pyvcp.wearc_display
-    pin+pyvcp.partcount_display
     pin+lcec.0.DO1.dout-3
     pin+lcec.0.DO1.dout-2
     pin+lcec.0.DO1.dout-1
@@ -27,6 +25,7 @@ set ::watchlist {
     pin+mycia402.3.drv-actual-position
     pin+mycia402.3.pos-fb
     pin+mycia402.3.pos-cmd
+    pin+gladevcp.F1_Wear_Compensation-f
 }
 set ::workmode watchhal
 set ::watchInterval 100

@@ -1,0 +1,45 @@
+bash
+#!/bin/bash
+# M118: Execute ESLAH action with parameters (aggressive reset)
+
+# Check if we have enough parameters
+if [ $# -lt 2 ]; then
+    echo "Error: M118 requires P and Q parameters" >&2
+    exit 1
+fi
+
+# Convert parameters to integers
+P_VAL=$(printf "%.0f" "$1")  # eslah_count as integer
+Q_VAL=$(printf "%.0f" "$2")  # workpiece_type as integer
+
+echo "M118: P=$P_VAL, Q=$Q_VAL"
+
+# Run Python script with parameters
+/home/cnc/anaconda3/bin/python /home/cnc/linuxcnc/configs/xzacw/eslah_action.py "$P_VAL" "$Q_VAL"
+
+# Check if Python script was successful
+if [ $? -eq 0 ]; then
+    echo "ESLAH action completed successfully"
+    
+    # Aggressive reset method
+    echo "Resetting ESLAH button..."
+    
+    # Method 1: Multiple setp attempts
+    halcmd setp gladevcp.ESLAH 0
+    sleep 0.1
+    halcmd setp gladevcp.ESLAH 0
+    sleep 0.1
+    halcmd setp gladevcp.ESLAH 0
+    
+    # Method 2: Force via unlink/set/net
+    halcmd unlinkp gladevcp.ESLAH 2>/dev/null || true
+    halcmd setp gladevcp.ESLAH 0
+    sleep 0.2
+    halcmd net eslah-reset gladevcp.ESLAH
+    
+    echo "ESLAH button reset completed"
+    exit 0
+else
+    echo "ESLAH action failed"
+    exit 1
+fi

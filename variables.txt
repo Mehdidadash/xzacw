@@ -1,2 +1,3 @@
-wearc=-0.054500
-partcount=1016.000000
+touchoff=-0.054500
+total_machined=1016
+serie_machined_display=0

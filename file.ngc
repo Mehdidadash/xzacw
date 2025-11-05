@@ -4,19 +4,21 @@ g21 (set unit to mm)
 g90
 g64
 g92.1
-#70=30(count of files)
-#71=0 (iritation parameter)
+m119 p0
 M66 E0 L0 (dummy m66 to force sync hal pins)
 M114
 M115
 M66 E0 L0 (dummy m66 to force sync hal pins)
 m105
-#72=#<_hal[pyvcp.wearc_display]> (x touch place last time: .065)
+#70=#<_hal[gladevcp.serie_total-f]>(count of files)
+#71=0 (iritation parameter)
+m116 p[#71]
+#72=#<_hal[gladevcp.touchoff_display-f]> (x touch place last time: .065)
 #73= 6 (x start and retreat point)
 #74=[#73+.6-#72] (wear compensation)
-#75=0.0006 (wheel wear per part sx 0.0004 s1 0.0008 s2 0.00075 f1 0.0006 f2 0.0005 f3 0.0004)
+#75=0.00050 (wheel wear per part SX 0.0004 S1 0.0008 S2 0.00075 F1 0.0006 F2 0.0005 F3 0.0004)
 #76=30 (total length of the part)
-#77=#<_hal[pyvcp.partcount_display]> (read count of parts)
+#77=#<_hal[gladevcp.total_machined]> (read count of parts)
 M66 E0 L0 (dummy m66 to force sync hal pins)
 #2=1 (radial multipication)
 #3=0(radial offset)
@@ -40,7 +42,7 @@ g0 x1
 o111 while [#78 LE #80] (first iteration)
 o112 while [#79 LE 3] (first iteration)
 #4=[#4+1] (update grinding feed override dynamically before calling the subroutine)
-o<s1> call [#4] [#78] [#79] [#6] [#80]
+o<f2> call [#4] [#78] [#79] [#6] [#80]
 #79=[#79+1]
 o112 endwhile
 #78=[#78+1]
@@ -69,9 +71,20 @@ M113 P#77
 M114
 M115
 #71=[#71+1]
-M66 E0 L0 (dummy m66 to force sync hal pins)
+m116 p[#71]
 (DEBUG, #71 count in serie)
+O113 if [#<_hal[gladevcp.ESLAH]> EQ 1]
+    (ESLAH is active - get parameters)
+    #101= #<_hal[gladevcp.ESLAH_count]> (eslah count)
+    #102 = #<_hal[gladevcp.workpiece_type_value]>  (workpiece type)
+    (Execute M118 with parameters)
+    M118 P#101 Q#102
+    (M118 will reset ESLAH automatically)
+    M0
+O113 endif
+M66 E0 L0 (dummy m66 to force sync hal pins)
 o110 endwhile
+m119 p1
 m108
 m104
 m106

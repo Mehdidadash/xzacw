@@ -28,7 +28,7 @@ net control mb2hal.Operation_command.00 <= mux4.0.out
 net input1_code_u32 conv-float-u32.0.in <= mb2hal.input1_code.00.float
 net input1_code_slice_in bitslice.0.in <= conv-float-u32.0.out
 
-net io1_in_00 <= bitslice.0.out-00 => pyvcp.io1_in_00
+net io1_in_00 <= bitslice.0.out-00 => gladevcp.io1_in_00
 net io1_in_01 <= bitslice.0.out-01
 net io1_in_02 <= bitslice.0.out-02
 net io1_in_03 <= bitslice.0.out-03
@@ -37,14 +37,14 @@ net io1_in_05 <= bitslice.0.out-05
 net io1_in_06 <= bitslice.0.out-06
 net io1_in_07 <= bitslice.0.out-07
 
-net IO1_out0 wsum.0.bit.0.in <= pyvcp.IO1_out0
-net IO1_out1 wsum.0.bit.1.in <= pyvcp.IO1_out1
-net IO1_out2 wsum.0.bit.2.in <= pyvcp.IO1_out2
-net IO1_out3 wsum.0.bit.3.in <= pyvcp.IO1_out3
-net IO1_out4 wsum.0.bit.4.in <= pyvcp.IO1_out4
-net IO1_out5 wsum.0.bit.5.in <= pyvcp.IO1_out5
-net IO1_out6 wsum.0.bit.6.in <= pyvcp.IO1_out6
-net IO1_out7 wsum.0.bit.7.in <= pyvcp.IO1_out7
+net IO1_out0 wsum.0.bit.0.in <= gladevcp.IO1_out0
+net IO1_out1 wsum.0.bit.1.in <= gladevcp.IO1_out1
+net IO1_out2 wsum.0.bit.2.in <= gladevcp.IO1_out2
+net IO1_out3 wsum.0.bit.3.in <= gladevcp.IO1_out3
+net IO1_out4 wsum.0.bit.4.in <= gladevcp.IO1_out4
+net IO1_out5 wsum.0.bit.5.in <= gladevcp.IO1_out5
+net IO1_out6 wsum.0.bit.6.in <= gladevcp.IO1_out6
+net IO1_out7 wsum.0.bit.7.in <= gladevcp.IO1_out7
 
 
 net IO_relays_float_in conv-s32-float.0.in <= wsum.0.sum

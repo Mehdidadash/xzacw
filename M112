@@ -1,22 +1,20 @@
 #!/bin/bash
-# M112 handler to update variables_handler.wearc and variables.txt
+# M112: update touchoff
 
-# Check if a parameter is provided
 if [ -z "$1" ]; then
   echo "Error: No parameter provided."
   exit 1
 fi
 
-# Unlink the pin from its signal
-halcmd unlinkp pyvcp.wearc_display
+pipe="/home/cnc/linuxcnc/configs/xzacw/variables_pipe.json"
 
-# Set the HAL pin value
-halcmd setp pyvcp.wearc_display "$1"
+# read existing pipe if exists
+if [ -f "$pipe" ]; then
+  data=$(cat "$pipe")
+else
+  data="{}"
+fi
 
-# Reconnect the pin to its signal
-halcmd net wearc-sync pyvcp.wearc_display
-
-# Update variables.txt
-sed -i "s/^wearc=.*/wearc=$1/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
-
+# update value
+echo "$data" | python3 -c "import sys,json; d=json.load(sys.stdin); d['touchoff']=$1; print(json.dumps(d))" > "$pipe"
 exit 0

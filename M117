@@ -1,0 +1,24 @@
+#!/bin/bash
+# M117: update serie_machined_display from variables.txt
+
+VARS_FILE="/home/cnc/linuxcnc/configs/xzacw/variables.txt"
+serie=$(grep "^serie_machined_display=" "$VARS_FILE" | cut -d '=' -f 2)
+
+if [ -z "$serie" ]; then
+  echo "Error: Failed to read serie_machined_display from variables.txt"
+  exit 1
+fi
+
+serie=${serie%.*}  # Remove decimal part to ensure integer
+
+# Unlink HAL pin from signal
+halcmd unlinkp gladevcp.serie_machined_display
+
+# Set the HAL pin value
+halcmd setp gladevcp.serie_machined_display "$serie"
+
+# Reconnect the pin to its signal
+halcmd net serie-machined-sync gladevcp.serie_machined_display
+
+echo "M117: Initialized serie_machined_display to $serie from variables.txt"
+exit 0

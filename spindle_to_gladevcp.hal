@@ -1,0 +1,49 @@
+# ------------------------------
+# GladeVCP HAL Pin Initialization
+# ------------------------------
+
+# Load GladeVCP user module
+
+
+# Set tables visible
+setp gladevcp.table_1 1
+setp gladevcp.table_2 1
+setp gladevcp.table_3 1
+setp gladevcp.table_4 1
+setp gladevcp.table_5 1
+setp gladevcp.table_6 1
+setp gladevcp.table_7 1
+setp gladevcp.table_8 1
+setp gladevcp.table_9 1
+# ------------------------------
+
+
+# ------------------------------
+# Digital Inputs from LCEC
+# ------------------------------
+net Gripper_in       lcec.0.DI1.din-0 => or2.8.in0 => gladevcp.gripper_in
+net jack_in          lcec.0.DI1.din-1 => or2.9.in0 => gladevcp.jack_in
+net Gripper_jack_in  lcec.0.DI1.din-2 => or2.10.in0 => gladevcp.gripper_jack_in
+net Coolant_in       lcec.0.DI1.din-3 => or2.11.in0 => gladevcp.coolant_in
+
+# ------------------------------
+# Digital Outputs to LCEC
+# ------------------------------
+net DO01_00 lcec.0.DO1.dout-0 <= or2.8.out => gladevcp.gripper_out
+net DO01_01 lcec.0.DO1.dout-1 <= or2.9.out => gladevcp.jack_out
+net DO01_02 lcec.0.DO1.dout-2 <= or2.10.out => gladevcp.gripper_jack_out
+net DO01_03 lcec.0.DO1.dout-3 <= or2.11.out => gladevcp.coolant_out
+
+# ------------------------------
+# Spindle RPM
+# ------------------------------
+net spindle-rpm => gladevcp.spindle_rpm
+
+#
+# In your HAL file, add these lines:
+
+# Create a signal to bridge between the two
+net total-machined-sync gladevcp.total_machined
+net serie-machined-sync gladevcp.serie_machined_display
+
+net eslah-reset gladevcp.ESLAH

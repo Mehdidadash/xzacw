@@ -1,25 +1,25 @@
 #!/bin/bash
-# M113 handler to update partcount in variables_handler and variables.txt
+# M113: update total_machined
 
-# Check if a parameter is provided
 if [ -z "$1" ]; then
   echo "Error: No parameter provided."
   exit 1
 fi
 
-# Extract the parameter value
 new_count=$1
+new_count=${new_count%.*}  # Remove decimal part to ensure integer
 
 # Unlink the pin from its signal
-halcmd unlinkp pyvcp.partcount_display
+halcmd unlinkp gladevcp.total_machined
 
 # Set the HAL pin value
-halcmd setp pyvcp.partcount_display "$new_count"
+halcmd setp gladevcp.total_machined "$new_count"
 
 # Reconnect the pin to its signal
-halcmd net partcount-sync pyvcp.partcount_display
+halcmd net total-machined-sync gladevcp.total_machined
 
 # Update variables.txt
-sed -i "s/^partcount=.*/partcount=$new_count/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
+sed -i "s/^total_machined=.*/total_machined=$new_count/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
 
+echo "M113: Updated total_machined to $new_count"
 exit 0
