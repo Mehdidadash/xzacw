@@ -1,20 +1,75 @@
 #!/bin/bash
-# M112: update touchoff
+# M112: update touchoff with file sync verification
 
 if [ -z "$1" ]; then
   echo "Error: No parameter provided."
   exit 1
 fi
 
+echo "M112: Setting touchoff to $1"
 pipe="/home/cnc/linuxcnc/configs/xzacw/variables_pipe.json"
 
-# read existing pipe if exists
-if [ -f "$pipe" ]; then
-  data=$(cat "$pipe")
-else
-  data="{}"
-fi
+# Use Python with proper file sync
+/home/cnc/anaconda3/bin/python -c "
+import json
+import os
+import time
 
-# update value
-echo "$data" | python3 -c "import sys,json; d=json.load(sys.stdin); d['touchoff']=$1; print(json.dumps(d))" > "$pipe"
+target_value = $1
+pipe_path = '$pipe'
+
+print(f'M112 Python: Setting touchoff to {target_value}')
+
+# Create the data
+data = {'touchoff': target_value}
+json_data = json.dumps(data)
+
+# Write with explicit sync
+try:
+    with open(pipe_path, 'w') as f:
+        f.write(json_data)
+        f.flush()  # Force write to buffer
+        os.fsync(f.fileno())  # Force write to disk
+    print('M112 Python: File written and synced to disk')
+    
+    # Verify the file is readable and has content
+    max_verify_attempts = 5
+    for verify_attempt in range(max_verify_attempts):
+        time.sleep(0.05)  # Small delay for filesystem
+        
+        if not os.path.exists(pipe_path):
+            print(f'M112 Python: Verify {verify_attempt + 1} - File does not exist')
+            continue
+            
+        file_size = os.path.getsize(pipe_path)
+        print(f'M112 Python: Verify {verify_attempt + 1} - File size: {file_size} bytes')
+        
+        if file_size > 0:
+            # Try to read the content
+            try:
+                with open(pipe_path, 'r') as f:
+                    content = f.read().strip()
+                print(f'M112 Python: File content: {content}')
+                
+                # Verify it's valid JSON
+                parsed = json.loads(content)
+                if parsed.get('touchoff') == target_value:
+                    print('M112 Python: SUCCESS - File verified and contains correct data')
+                    break
+                else:
+                    print(f'M112 Python: WARNING - File content mismatch: {parsed}')
+            except Exception as e:
+                print(f'M112 Python: Verify error: {e}')
+        
+        if verify_attempt == max_verify_attempts - 1:
+            print('M112 Python: WARNING - File verification failed but continuing')
+            
+except Exception as e:
+    print(f'M112 Python: CRITICAL ERROR - {e}')
+    import traceback
+    traceback.print_exc()
+    exit(1)
+"
+
+echo "M112: Script completed"
 exit 0

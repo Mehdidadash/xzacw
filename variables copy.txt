@@ -1,5 +1,5 @@
-touchoff=0.5082
-total_machined=177
+touchoff=-0.0711
+total_machined=1081
 serie_machined_display=0
 flut=1
 pass=7

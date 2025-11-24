@@ -1,0 +1,9 @@
+o<advance> sub
+g92.1
+g0 x123.068
+g4 p2
+g0 z63 w65.5
+g4 p2
+g0 x6
+m107 (coolant on)
+o<advance> endsub

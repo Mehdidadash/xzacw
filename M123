@@ -1,0 +1,24 @@
+#!/bin/bash
+# M123: update pass from variables.txt
+
+VARS_FILE="/home/cnc/linuxcnc/configs/xzacw/variables.txt"
+serie=$(grep "^pass=" "$VARS_FILE" | cut -d '=' -f 2)
+
+if [ -z "$serie" ]; then
+  echo "Error: Failed to read pass from variables.txt"
+  exit 1
+fi
+
+serie=${serie%.*}  # Remove decimal part to ensure integer
+
+# Unlink HAL pin from signal
+halcmd unlinkp gladevcp.pass
+
+# Set the HAL pin value
+halcmd setp gladevcp.pass "$serie"
+
+# Reconnect the pin to its signal
+halcmd net pass-sync gladevcp.pass
+
+#echo "M123: Initialized pass to $serie from variables.txt"
+exit 0

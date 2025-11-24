@@ -1,6 +1,5 @@
-bash
 #!/bin/bash
-# M118: Execute ESLAH action with parameters (aggressive reset)
+# M118: Execute eslah action with parameters (simple and reliable reset)
 
 # Check if we have enough parameters
 if [ $# -lt 2 ]; then
@@ -9,37 +8,27 @@ if [ $# -lt 2 ]; then
 fi
 
 # Convert parameters to integers
-P_VAL=$(printf "%.0f" "$1")  # eslah_count as integer
-Q_VAL=$(printf "%.0f" "$2")  # workpiece_type as integer
+P_VAL=$(printf "%.0f" "$1")  # workpiece_type as integer
+Q_VAL=$(printf "%.0f" "$2")  # slah_count as integere
 
-echo "M118: P=$P_VAL, Q=$Q_VAL"
+#echo "M118: P=$P_VAL, Q=$Q_VAL"
 
 # Run Python script with parameters
-/home/cnc/anaconda3/bin/python /home/cnc/linuxcnc/configs/xzacw/eslah_action.py "$P_VAL" "$Q_VAL"
+/home/cnc/anaconda3/bin/python /home/cnc/linuxcnc/configs/xzacw/eslah_m118.py "$P_VAL" "$Q_VAL"
 
 # Check if Python script was successful
 if [ $? -eq 0 ]; then
-    echo "ESLAH action completed successfully"
+    echo "eslah action completed successfully"
     
-    # Aggressive reset method
-    echo "Resetting ESLAH button..."
-    
-    # Method 1: Multiple setp attempts
-    halcmd setp gladevcp.ESLAH 0
+    # Simple and reliable reset using the signal
+    #echo "Resetting eslah button via signal..."
+    halcmd sets eslah-reset 0
     sleep 0.1
-    halcmd setp gladevcp.ESLAH 0
-    sleep 0.1
-    halcmd setp gladevcp.ESLAH 0
+    halcmd sets eslah-reset 0  # Double tap for reliability
     
-    # Method 2: Force via unlink/set/net
-    halcmd unlinkp gladevcp.ESLAH 2>/dev/null || true
-    halcmd setp gladevcp.ESLAH 0
-    sleep 0.2
-    halcmd net eslah-reset gladevcp.ESLAH
-    
-    echo "ESLAH button reset completed"
+    #echo "eslah button reset completed"
     exit 0
 else
-    echo "ESLAH action failed"
+    echo "eslah action failed"
     exit 1
 fi

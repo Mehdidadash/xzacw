@@ -26,6 +26,14 @@ set ::watchlist {
     pin+mycia402.3.pos-fb
     pin+mycia402.3.pos-cmd
     pin+gladevcp.F1_Wear_Compensation-f
+    pin+gladevcp.eslah_count-f
+    pin+gladevcp.eslah
+    sig+eslah-reset
+    pin+gladevcp.workpiece_type_value-f
+    pin+gladevcp.table_9
+    pin+gladevcp.table_8
+    pin+gladevcp.touchoff_display-f
+    pin+gladevcp.touchoff_display-s
 }
 set ::workmode watchhal
 set ::watchInterval 100

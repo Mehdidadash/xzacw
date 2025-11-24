@@ -10,24 +10,39 @@ M114
 M115
 M66 E0 L0 (dummy m66 to force sync hal pins)
 m105
+O115 if [EXISTS[#<_hal[gladevcp.serie_total-f]>]]
 #70=#<_hal[gladevcp.serie_total-f]>(count of files)
+o115 else
+#70=1
+o115 endif
 #71=0 (iritation parameter)
 m116 p[#71]
-#72=#<_hal[gladevcp.touchoff_display-f]> (x touch place last time: .065)
+O116 if [EXISTS[#<_hal[gladevcp.touchoff_display-f]>]]
+#72=#<_hal[gladevcp.touchoff_display-f]>(count of files)
+#77=#<_hal[gladevcp.total_machined]> (read count of parts)
+#83=#<_hal[gladevcp.flut]> (number of flutes)
+#84=#<_hal[gladevcp.pass]> (number of passes)
+o116 else
+#72=.6
+#77=0
+#83=0
+#84=0
+o116 endif
 #73= 6 (x start and retreat point)
 #74=[#73+.6-#72] (wear compensation)
-#75=0.00050 (wheel wear per part SX 0.0004 S1 0.0008 S2 0.00075 F1 0.0006 F2 0.0005 F3 0.0004)
-#76=30 (total length of the part)
-#77=#<_hal[gladevcp.total_machined]> (read count of parts)
+#75=0.00040 (wheel wear per part SX 0.0004 S1 0.0008 S2 0.00075 F1 0.0006 F2 0.0005 F3 0.0004)
+#76=26 (total length of the part)
 M66 E0 L0 (dummy m66 to force sync hal pins)
 #2=1 (radial multipication)
 #3=0(radial offset)
 #4=1 (grinding feed override)
 #5=2 (other ops feed override)
 #6=4 (default linear feed speed mm/s)
-#78=1 (number of iterations for depths)
-#79=1 (number of iterations for threads)
-#80=6 (total number of iterations for depths)
+#78=1 (number of iterations for passes)
+#79=1 (number of iterations for flutes)
+#80=6 (total number of iterations for passes)
+m120 p[#79]
+m122 p[#78]
 o110 while [#71 LT #70]
 #74=[#73+.6-#72]
 g0 x[#73]
@@ -39,14 +54,17 @@ g4 p5
 m107 (coolant)
 g92 c0
 g0 x1
-o111 while [#78 LE #80] (first iteration)
-o112 while [#79 LE 3] (first iteration)
+o111 while [#78 LE #80] (pass iteration)
+o112 while [#79 LE 3] (flute iteration)
 #4=[#4+1] (update grinding feed override dynamically before calling the subroutine)
-o<f2> call [#4] [#78] [#79] [#6] [#80]
+o<sx> call [#4] [#78] [#79] [#6] [#80]
 #79=[#79+1]
+m120 p[#79]
 o112 endwhile
 #78=[#78+1]
-#79=1 (reset thread iteration counter)
+m122 p[#78]
+#79=1 (reset flut iteration counter)
+m120 p[#79]
 o111 endwhile
 #78=1 (reset depth iteration counter)
 g0 x[#73]
@@ -61,10 +79,12 @@ M103
 g4 p1
 m102
 g4 p1
-
 g92.1
 g90 g0 z63 c0
+M66 E0 L0 (dummy m66 to force sync hal pins)
+M114
 #72=[#72-#75]
+M66 E0 L0 (dummy m66 to force sync hal pins)
 M112 P#72
 #77=[#77+1]
 M113 P#77
@@ -72,15 +92,15 @@ M114
 M115
 #71=[#71+1]
 m116 p[#71]
-(DEBUG, #71 count in serie)
-O113 if [#<_hal[gladevcp.ESLAH]> EQ 1]
-    (ESLAH is active - get parameters)
-    #101= #<_hal[gladevcp.ESLAH_count]> (eslah count)
-    #102 = #<_hal[gladevcp.workpiece_type_value]>  (workpiece type)
-    (Execute M118 with parameters)
-    M118 P#101 Q#102
-    (M118 will reset ESLAH automatically)
-    M0
+M66 E0 L0 (dummy m66 to force sync hal pins)
+O113 if [EXISTS[#<_hal[gladevcp.eslah]>]]
+#81=#<_hal[gladevcp.workpiece_type_value-f]>
+#82=#<_hal[gladevcp.eslah_count-f]>
+o114 if [#<_hal[gladevcp.eslah]> EQ 1]
+(DEBUG, eslah_count=#82, worktype=#81)
+M118 P#81 Q#82
+M0
+O114 endif
 O113 endif
 M66 E0 L0 (dummy m66 to force sync hal pins)
 o110 endwhile

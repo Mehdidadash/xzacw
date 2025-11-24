@@ -20,5 +20,5 @@ halcmd setp gladevcp.serie_machined_display "$serie"
 # Reconnect the pin to its signal
 halcmd net serie-machined-sync gladevcp.serie_machined_display
 
-echo "M117: Initialized serie_machined_display to $serie from variables.txt"
+#echo "M117: Initialized serie_machined_display to $serie from variables.txt"
 exit 0

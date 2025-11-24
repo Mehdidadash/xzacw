@@ -21,5 +21,5 @@ halcmd net serie-machined-sync gladevcp.serie_machined_display
 # Update variables.txt
 sed -i "s/^serie_machined=.*/serie_machined=$new_count/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
 
-echo "M116: Updated serie_machined to $new_count"
+#echo "M116: Updated serie_machined to $new_count"
 exit 0

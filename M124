@@ -1,0 +1,26 @@
+#!/bin/bash
+# M124: Remove eslah files with parameters (same as M118 format)
+
+# Check if we have enough parameters
+if [ $# -lt 2 ]; then
+    echo "Error: M124 requires P and Q parameters" >&2
+    exit 1
+fi
+
+# Convert parameters to integers
+P_VAL=$(printf "%.0f" "$1")  # remove_eslah_count as integer
+Q_VAL=$(printf "%.0f" "$2")  # workpiece_type_value as integer
+
+echo "M124: P=$P_VAL, Q=$Q_VAL"
+
+# Run Python handler with parameters (same format as M118)
+/home/cnc/anaconda3/bin/python /home/cnc/linuxcnc/configs/xzacw/m124_handler.py "$P_VAL" "$Q_VAL"
+
+# Check if Python script was successful
+if [ $? -eq 0 ]; then
+    echo "M124: eslah file removal completed successfully"
+    exit 0
+else
+    echo "M124: eslah file removal failed"
+    exit 1
+fi

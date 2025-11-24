@@ -1,0 +1,25 @@
+#!/bin/bash
+# M120: update flut
+
+if [ -z "$1" ]; then
+  echo "Error: No parameter provided."
+  exit 1
+fi
+
+new_count=$1
+new_count=${new_count%.*}  # Remove decimal part to ensure integer
+
+# Unlink the pin from its signal
+halcmd unlinkp gladevcp.flut
+
+# Set the HAL pin value
+halcmd setp gladevcp.flut "$new_count"
+
+# Reconnect the pin to its signal
+halcmd net flut-sync gladevcp.flut
+
+# Update variables.txt
+sed -i "s/^flut=.*/flut=$new_count/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
+
+#echo "M120: Updated flut to $new_count"
+exit 0

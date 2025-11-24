@@ -11,7 +11,7 @@ import json
 from gi.repository import Gtk, GLib, Gdk
 import hal_glib
 import hal
-
+import linuxcnc
 class HandlerClass:
     def __init__(self, halcomp, builder, useropts):
         self.halcomp = halcomp
@@ -24,7 +24,7 @@ class HandlerClass:
         self.total_machined = builder.get_object('total_machined')
         self.touchoff_display = builder.get_object('touchoff_display')
         self.test_button = builder.get_object('test_button')
-        self.eslah_button = builder.get_object('ESLAH')
+        self.eslah_button = builder.get_object('eslah')
         self.workpiece_spin = builder.get_object('workpiece_type_value')
 
         # radio buttons
@@ -61,30 +61,39 @@ class HandlerClass:
         except Exception:
             pass
 
-        # ESLAH button initialization
-        # Initial sync with HAL pin
-        try:
-            self.eslah_active = bool(self.halcomp["ESLAH"])
-            self.update_eslah_appearance()
-            print(f"Initial ESLAH state: {self.eslah_active}")
-        except Exception as e:
-            print(f"Error reading initial ESLAH state: {e}")
+        # eslah button - HALIO_Button with I/O pin
+        self.eslah_button = builder.get_object('eslah')
+        self.eslah_toggle_state = False
+        
         if self.eslah_button:
-            # HALIO_Button handles the HAL pin automatically
-            # We just need to sync our internal state
-            self.eslah_active = False
+            # COMPLETELY DISABLE HALIO_BUTTON'S DEFAULT BEHAVIOR
+            # Method 1: Disconnect all signal handlers
+            try:
+                # Get all signal handlers and disconnect them
+                self.eslah_button.handler_block_by_func(None)  # Block all
+            except:
+                pass
+            
+            # Method 2: Use button-press-event and return True to stop propagation
+            self.eslah_button.connect("button-press-event", self.on_eslah_button_press)
+            self.eslah_button.connect("button-release-event", self.on_eslah_button_release)
+            
+            # Initial sync
             self.sync_eslah_state()
-        # Workpiece spinbutton initialization
-        if self.workpiece_spin:
-            # Map workpiece types to values: SX=0, S1=1, S2=2, F1=3, F2=4, F3=5
-            self.workpiece_spin.set_value(1)  # Default to S1
-            self.workpiece_spin.connect("value-changed", self.on_workpiece_spin_changed)
 
         # convenience: store component name
         try:
             self.comp_name = self.halcomp.name
         except Exception:
             self.comp_name = "gladevcp"
+        
+        # Workpiece spinbutton initialization
+        self.workpiece_spin = builder.get_object('workpiece_type_value')
+        if self.workpiece_spin:
+            # Connect the value-changed signal
+            self.workpiece_spin.connect("value-changed", self.on_workpiece_spin_changed)
+            # Set initial value
+            self.workpiece_spin.set_value(1)  # Default to S1
 
         # Connect widget signals
         if self.touchoff_display:
@@ -97,6 +106,21 @@ class HandlerClass:
         self.last_hal_total_machined = 0
         self.last_hal_touchoff = 0.0
 
+
+        ########wear compensation###########
+         # Initialize wear compensation system FIRST
+        self.init_wear_compensation()
+        
+        # THEN connect wear compensation spinbutton signals
+        wear_spinbuttons = [
+            "SX_Wear_Compensation", "S1_Wear_Compensation", "S2_Wear_Compensation",
+            "F1_Wear_Compensation", "F2_Wear_Compensation", "F3_Wear_Compensation"
+        ]
+        
+        for spinbutton_id in wear_spinbuttons:
+            spinbutton = self.builder.get_object(spinbutton_id)
+            if spinbutton:
+                spinbutton.connect("value-changed", self.on_wear_compensation_changed)
         # periodic polls
         GLib.timeout_add(150, self._poll_hal_to_widget)
         GLib.timeout_add(100, self._poll_json_variables)
@@ -104,67 +128,79 @@ class HandlerClass:
         # load variables once at startup
         GLib.idle_add(self.load_variables)
 
-    def sync_eslah_state(self):
-        """Sync our internal state with the HAL pin"""
-        try:
-            self.eslah_active = bool(self.halcomp["ESLAH"])
-            self.update_eslah_appearance()
-            print(f"ESLAH state synced: {self.eslah_active}")
-        except Exception as e:
-            print(f"Error syncing ESLAH state: {e}")
+    
+
+    def on_reload_clicked(widget=None, data=None):
+        c = linuxcnc.command()
+        print("Reloading file from GladeVCP…")
+        c.program_reload()
 
     # ---------------------------
-    # ESLAH button handling
+    # eslah button handling
     # ---------------------------
-    def on_eslah_pressed(self, widget):
-        """Handle ESLAH button press - update our internal state"""
-        # For HALIO_Button, the HAL pin is handled automatically
-        # We just need to update our UI state
+    def on_eslah_button_press(self, widget, event):
+        """Handle button press and completely prevent default behavior"""
+        print("eslah button press - blocking default")
+        # Return True to stop the signal from propagating to HALIO_Button's internal handlers
+        return True
+
+    def on_eslah_button_release(self, widget, event):
+        """Handle button release and implement our toggle logic"""
         try:
-            # Read the current state from the HAL output pin
-            self.eslah_active = bool(self.halcomp["ESLAH"])
+            # Toggle our internal state
+            self.eslah_toggle_state = not self.eslah_toggle_state
+            
+            # Set the HAL I/O pin to our toggle state
+            self.halcomp["eslah"] = self.eslah_toggle_state
+            
+            # Update appearance
             self.update_eslah_appearance()
-            print(f"ESLAH button pressed - state: {self.eslah_active}")
+            
+            print(f"eslah released - toggle state: {self.eslah_toggle_state}")
+            
+            # If turning ON, trigger action
+            if self.eslah_toggle_state:
+                self.trigger_eslah_action()
+            
+            # Return True to stop the signal from propagating to HALIO_Button's internal handlers
+            return True
+                
         except Exception as e:
-            print(f"Error reading ESLAH state: {e}")
+            print(f"Error in eslah release: {e}")
+            return True
+
 
     def update_eslah_appearance(self):
-        """Update ESLAH button appearance based on state"""
+        """Update eslah button appearance"""
         if self.eslah_button:
-            if self.eslah_active:
+            if self.eslah_toggle_state:
                 self.eslah_button.set_label("اعمال خواهد شد - کلیک برای لغو")
                 self.eslah_button.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse("#00FF00"))
             else:
-                self.eslah_button.set_label("اعمال نمیشود - کلیک برای فعال سازی")
+                self.eslah_button.set_label("اعمال نمیشود - کلیک برای فعال سازی") 
                 self.eslah_button.modify_bg(Gtk.StateType.NORMAL, None)
 
-
-        # ---------------------------
-    # ESLAH ToggleButton handling
-    # ---------------------------
-    def on_eslah_toggled(self, widget):
-        """Handle ESLAH toggle button state change"""
-        self.eslah_active = widget.get_active()
-        
-        if self.eslah_active:
-            widget.set_label("اعمال خواهد شد - کلیک برای لغو")
-            widget.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse("#00FF00"))
-        else:
-            widget.set_label("اعمال نمیشود - کلیک برای فعال سازی")
-            widget.modify_bg(Gtk.StateType.NORMAL, None)
-        
-        print(f"ESLAH state: {self.eslah_active}")
+    def sync_eslah_state(self):
+        """Sync with HAL pin state"""
+        try:
+            current_state = bool(self.halcomp["eslah"])
+            self.eslah_toggle_state = current_state
+            self.update_eslah_appearance()
+            print(f"eslah state synced: {self.eslah_toggle_state}")
+        except Exception as e:
+            print(f"Error syncing eslah state: {e}")
 
     def reset_eslah_button(self):
-        """Reset ESLAH button programmatically"""
-        try:
-            # For HALIO_Button with I/O pin, we can set it directly
-            self.halcomp["ESLAH"] = False
-            self.eslah_active = False
-            self.update_eslah_appearance()
-            print("ESLAH reset successfully")
-        except Exception as e:
-            print(f"Error resetting ESLAH: {e}")
+        """Reset eslah programmatically"""
+        self.eslah_toggle_state = False
+        self.halcomp["eslah"] = False
+        self.update_eslah_appearance()
+        print("eslah reset programmatically")
+
+    def trigger_eslah_action(self):
+        """Optional: Trigger action when eslah is turned ON"""
+        # Your existing trigger code here
+        print("eslah activated - action would trigger here")
 
 
     # ---------------------------
@@ -266,7 +302,7 @@ class HandlerClass:
         except Exception:
             pass
         try:
-            self.halcomp["touchoff_display-s"] = int(round(val))
+            self.halcomp["touchoff_display-s"] = int(round(val, 0))  # Explicit rounding to 0 decimal places
         except Exception:
             pass
 
@@ -280,34 +316,7 @@ class HandlerClass:
     # Poll HAL -> widget (external HAL setp updates)
     # ---------------------------
     def _poll_hal_to_widget(self):
-        # touchoff: prefer feedback pin if present
-        try:
-            val = None
-            try:
-                val = float(self.halcomp["touchoff_display-f"])
-            except Exception:
-                try:
-                    val = float(self.halcomp["touchoff_display"])
-                except Exception:
-                    val = None
 
-            if val is not None and val != self.last_hal_touchoff:
-                self.last_hal_touchoff = val
-                if self.touchoff_display:
-                    try:
-                        self.touchoff_display.handler_block_by_func(self.on_touchoff_changed)
-                    except Exception:
-                        pass
-                    try:
-                        self.touchoff_display.set_value(float(val))
-                    except Exception:
-                        pass
-                    try:
-                        self.touchoff_display.handler_unblock_by_func(self.on_touchoff_changed)
-                    except Exception:
-                        pass
-        except Exception:
-            pass
 
         # total_machined: read halcomp pin and update widget
         try:
@@ -339,99 +348,122 @@ class HandlerClass:
         except Exception:
             pass
 
-        # Sync ESLAH state with HAL pin
+            # eslah state sync
+        # eslah state sync for external changes
         try:
-            current_eslah_state = bool(self.halcomp["ESLAH"])
-            if current_eslah_state != self.eslah_active:
-                self.eslah_active = current_eslah_state
+            current_hal_state = bool(self.halcomp["eslah"])
+            if current_hal_state != self.eslah_toggle_state:
+                print(f"eslah state changed externally: {self.eslah_toggle_state} -> {current_hal_state}")
+                self.eslah_toggle_state = current_hal_state
                 self.update_eslah_appearance()
-                print(f"ESLAH state changed to: {self.eslah_active}")
         except Exception as e:
-            print(f"Error reading ESLAH pin: {e}")
+            print(f"Error polling eslah state: {e}")
         
         return True
         
-
+    
     # ---------------------------
     # JSON pipe: M-codes write here, handler picks them up and updates widgets
     # ---------------------------
     def _poll_json_variables(self):
-        if not os.path.exists(self.pipe_file):
+        """Poll for JSON variable updates with enhanced debugging"""
+        pipe_file = self.pipe_file
+        
+        #print(f"POLL_JSON: Checking pipe file at: {pipe_file}")
+        #print(f"POLL_JSON: File exists: {os.path.exists(pipe_file)}")
+        
+        if not os.path.exists(pipe_file):
+            # Check if there are any other pipe files
+            pipe_dir = os.path.dirname(pipe_file)
+            all_files = os.listdir(pipe_dir)
+            json_files = [f for f in all_files if f.startswith('variables_pipe')]
+            if json_files:
+                print(f"POLL_JSON: Found other pipe files: {json_files}")
             return True
+            
         try:
-            with open(self.pipe_file, "r") as f:
-                data = json.load(f)
-        except Exception:
-            try:
-                os.remove(self.pipe_file)
-            except Exception:
-                pass
-            return True
-
-        # touchoff via JSON
-        if "touchoff" in data and self.touchoff_display:
-            try:
+            # Get file info for debugging
+            file_size = os.path.getsize(pipe_file)
+            file_mtime = os.path.getmtime(pipe_file)
+            print(f"POLL_JSON: File size: {file_size}, mtime: {file_mtime}")
+            
+            # Read the file content first
+            with open(pipe_file, "r") as f:
+                content = f.read().strip()
+                print(f"POLL_JSON: Raw content: '{content}'")
+                
+            if not content:
+                print("POLL_JSON: Empty content, removing file")
+                os.remove(pipe_file)
+                return True
+                
+            # Parse JSON
+            data = json.loads(content)
+            print(f"POLL_JSON: Parsed data: {data}")
+            
+            # Process touchoff update
+            if "touchoff" in data:
                 val = float(data["touchoff"])
-                try:
-                    self.touchoff_display.handler_block_by_func(self.on_touchoff_changed)
-                except Exception:
-                    pass
-                self.touchoff_display.set_value(float(val))
-                try:
-                    self.touchoff_display.handler_unblock_by_func(self.on_touchoff_changed)
-                except Exception:
-                    pass
+                print(f"POLL_JSON: Current last_hal_touchoff: {self.last_hal_touchoff}")
+                print(f"POLL_JSON: New value from pipe: {val}")
+                
+                # Always update regardless of difference for now (for testing)
+                print(f"POLL_JSON: Updating touchoff to {val}")
+                
+                # Update widget
+                if self.touchoff_display:
+                    try:
+                        self.touchoff_display.handler_block_by_func(self.on_touchoff_changed)
+                        self.touchoff_display.set_value(float(val))
+                        self.touchoff_display.handler_unblock_by_func(self.on_touchoff_changed)
+                        print(f"POLL_JSON: Widget updated to {val}")
+                    except Exception as e:
+                        print(f"POLL_JSON: Widget update error: {e}")
+                
+                # Update HAL pins
                 try:
                     self.halcomp["touchoff_display-f"] = float(val)
-                except Exception:
-                    pass
+                    print(f"POLL_JSON: HAL float pin updated to {val}")
+                except Exception as e:
+                    print(f"POLL_JSON: HAL float pin error: {e}")
+                    
                 try:
                     self.halcomp["touchoff_display-s"] = int(round(val))
-                except Exception:
-                    pass
+                    print(f"POLL_JSON: HAL int pin updated to {int(round(val))}")
+                except Exception as e:
+                    print(f"POLL_JSON: HAL int pin error: {e}")
+                
+                # Update variables.txt
                 self._write_variable_to_file("touchoff", val)
-            except Exception:
-                pass
-
-        # total_machined via JSON - update widget only (M113 script handles HAL pin)
-        if "total_machined" in data and self.total_machined:
+                self.last_hal_touchoff = val
+                print(f"POLL_JSON: variables.txt updated to {val}")
+            
+            # Remove the pipe file after processing
+            print("POLL_JSON: Removing pipe file after processing")
+            os.remove(pipe_file)
+            print("POLL_JSON: SUCCESS - File removed")
+                
+        except json.JSONDecodeError as e:
+            print(f"POLL_JSON: JSON decode error: {e}")
+            print(f"POLL_JSON: Content was: '{content}'")
             try:
-                val = int(data["total_machined"])
-                # Update widget only - M113 script will handle HAL pin via halcmd
-                try:
-                    self.total_machined.set_value(int(val))
-                except Exception:
-                    try:
-                        self.total_machined.set_label(str(int(val)))
-                    except Exception:
-                        pass
-                # Note: We don't update HAL pin here - M113 script does that
-            except Exception:
+                os.remove(pipe_file)
+            except:
                 pass
-
-        # ESLAH check via JSON
-        if "eslah_check" in data:
-            try:
-                if data["eslah_check"]:
-                    self.check_and_run_eslah_action()
-            except Exception:
-                pass
-
-        # remove pipe only when safely processed
-        try:
-            os.remove(self.pipe_file)
-        except Exception:
-            pass
-
+        except Exception as e:
+            print(f"POLL_JSON: Unexpected error: {e}")
+            import traceback
+            traceback.print_exc()
+            
         return True
 
     # ---------------------------
-    # ESLAH action check (if needed)
+    # eslah action check (if needed)
     # ---------------------------
     def check_and_run_eslah_action(self):
-        """Check if ESLAH is active and run action"""
-        if self.eslah_active:
-            print("ESLAH is active - running action script...")
+        """Check if eslah is active and run action"""
+        if self.eslah_toggle_state:  # Changed from self.eslah_active
+            print("eslah is active - running action script...")
             
             # Get workpiece value from spinbutton
             workpiece_value = 1
@@ -443,12 +475,12 @@ class HandlerClass:
             if os.path.exists(script_path):
                 try:
                     subprocess.run(["python3", script_path, "1", str(workpiece_value)], check=True)
-                    print("ESLAH action completed successfully")
+                    print("eslah action completed successfully")
                     self.reset_eslah_button()
                 except subprocess.CalledProcessError as e:
-                    print(f"ESLAH script failed: {e}")
+                    print(f"eslah script failed: {e}")
             else:
-                print(f"ESLAH script not found: {script_path}")
+                print(f"eslah script not found: {script_path}")
 
     # ---------------------------
     # Load variables.txt at startup (populate widgets)
@@ -535,6 +567,134 @@ class HandlerClass:
         except Exception as e:
             print(f"[myui_handler] ERROR writing var {key}: {e}")
 
+    def init_wear_compensation(self):
+        """Initialize wear compensation spinbuttons from wear.csv"""
+        try:
+            print("init_wear_compensation called")
+            if not os.path.exists(self.csv_path):
+                print(f"Wear CSV file not found: {self.csv_path}")
+                return
+            
+            # Map of tool names to spinbutton widgets
+            wear_widgets = {
+                "SX": self.builder.get_object("SX_Wear_Compensation"),
+                "S1": self.builder.get_object("S1_Wear_Compensation"), 
+                "S2": self.builder.get_object("S2_Wear_Compensation"),
+                "F1": self.builder.get_object("F1_Wear_Compensation"),
+                "F2": self.builder.get_object("F2_Wear_Compensation"),
+                "F3": self.builder.get_object("F3_Wear_Compensation")
+            }
+            
+            # Read wear.csv
+            with open(self.csv_path, 'r', newline='') as f:
+                reader = csv.reader(f)
+                for row in reader:
+                    if len(row) >= 2:
+                        tool_name = row[0].strip().upper()
+                        try:
+                            wear_value = float(row[1])
+                            # Update corresponding spinbutton widget
+                            spinbutton = wear_widgets.get(tool_name)
+                            if spinbutton:
+                                # Simply set the value - no signal blocking needed since handler isn't connected yet
+                                spinbutton.set_value(wear_value)
+                                print(f"Loaded {tool_name} wear: {wear_value}")
+                        except ValueError as e:
+                            print(f"Error parsing wear value for {tool_name}: {e}")
+                            continue
+                            
+        except Exception as e:
+            print(f"Error initializing wear compensation: {e}")
+
+    def on_wear_compensation_changed(self, widget):
+        """Handle wear compensation spinbutton changes - update wear.csv and HAL pins"""
+        try:
+            # Map of widget names to tool names
+            tool_map = {
+                "SX_Wear_Compensation": "SX",
+                "S1_Wear_Compensation": "S1",
+                "S2_Wear_Compensation": "S2", 
+                "F1_Wear_Compensation": "F1",
+                "F2_Wear_Compensation": "F2",
+                "F3_Wear_Compensation": "F3"
+            }
+            
+            # Get tool name from widget
+            tool_name = None
+            widget_name = None
+            for widget_id, name in tool_map.items():
+                widget_obj = self.builder.get_object(widget_id)
+                if widget_obj and widget_obj == widget:
+                    tool_name = name
+                    widget_name = widget_id
+                    break
+            
+            if not tool_name:
+                return
+                
+            wear_value = widget.get_value()
+            print(f"Wear compensation changed: {tool_name} = {wear_value}")
+            
+            # Update HAL pins (this should happen automatically, but let's be sure)
+            self.halcomp[f"{widget_name}-f"] = wear_value
+            self.halcomp[f"{widget_name}-s"] = int(wear_value * 10000)
+            
+            # Update wear.csv
+            self.update_wear_csv(tool_name, wear_value)
+            
+        except Exception as e:
+            print(f"Error handling wear compensation change: {e}")
+
+    def update_wear_csv(self, tool_name, wear_value):
+        """Update wear.csv with new wear compensation value"""
+        try:
+            # Read existing data
+            data = {}
+            if os.path.exists(self.csv_path):
+                with open(self.csv_path, 'r', newline='') as f:
+                    reader = csv.reader(f)
+                    for row in reader:
+                        if len(row) >= 2:
+                            data[row[0].strip().upper()] = row[1]
+            
+            # Update the specific tool
+            data[tool_name.upper()] = f"{wear_value:.5f}"
+            
+            # Write back to file
+            with open(self.csv_path, 'w', newline='') as f:
+                writer = csv.writer(f)
+                for tool, value in data.items():
+                    writer.writerow([tool, value])
+                    
+            print(f"Updated wear.csv: {tool_name} = {wear_value}")
+            
+        except Exception as e:
+            print(f"Error updating wear.csv: {e}")
+    def debug_wear_values(self):
+        """Debug method to check current wear values"""
+        wear_widgets = {
+            "SX": self.builder.get_object("SX_Wear_Compensation"),
+            "S1": self.builder.get_object("S1_Wear_Compensation"), 
+            "S2": self.builder.get_object("S2_Wear_Compensation"),
+            "F1": self.builder.get_object("F1_Wear_Compensation"),
+            "F2": self.builder.get_object("F2_Wear_Compensation"),
+            "F3": self.builder.get_object("F3_Wear_Compensation")
+        }
+        
+        for tool, widget in wear_widgets.items():
+            if widget:
+                value = widget.get_value()
+                print(f"{tool} widget value: {value}")
+                
+        # Check HAL pins
+        for tool in wear_widgets.keys():
+            try:
+                pin_base = f"{tool}_Wear_Compensation"
+                float_val = self.halcomp[f"{pin_base}-f"]
+                int_val = self.halcomp[f"{pin_base}-s"]
+                print(f"{tool} HAL pins: -f={float_val}, -s={int_val}")
+            except:
+                print(f"{tool} HAL pins: not accessible")
 
 def get_handlers(halcomp, builder, useropts):
     return [HandlerClass(halcomp, builder, useropts)]

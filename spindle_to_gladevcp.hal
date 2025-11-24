@@ -1,5 +1,12 @@
+#spidnle_to_gladevcp.hal as POSTGUI_HALFILE
+# This HAL file connects spindle data and digital I/O from a LCEC
+# controller to GladeVCP for display and control.
 # ------------------------------
 # GladeVCP HAL Pin Initialization
+#it is assumed that gladevcp module is already loaded in the main HAL file
+#using this line:
+#GLADEVCP = -c gladevcp -u myui_handler.py myui.ui
+
 # ------------------------------
 
 # Load GladeVCP user module
@@ -10,11 +17,12 @@ setp gladevcp.table_1 1
 setp gladevcp.table_2 1
 setp gladevcp.table_3 1
 setp gladevcp.table_4 1
-setp gladevcp.table_5 1
+setp gladevcp.table_5 0
 setp gladevcp.table_6 1
 setp gladevcp.table_7 1
 setp gladevcp.table_8 1
 setp gladevcp.table_9 1
+setp gladevcp.table_10 1
 # ------------------------------
 
 
@@ -44,6 +52,8 @@ net spindle-rpm => gladevcp.spindle_rpm
 
 # Create a signal to bridge between the two
 net total-machined-sync gladevcp.total_machined
-net serie-machined-sync gladevcp.serie_machined_display
+net serie-machined-sync gladevcp.serie_machined_display 
+net flut-sync gladevcp.flut
+net pass-sync gladevcp.pass
 
-net eslah-reset gladevcp.ESLAH
+net eslah-reset gladevcp.eslah

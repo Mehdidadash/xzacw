@@ -1,0 +1,25 @@
+#!/bin/bash
+# M122: update pass
+
+if [ -z "$1" ]; then
+  echo "Error: No parameter provided."
+  exit 1
+fi
+
+new_count=$1
+new_count=${new_count%.*}  # Remove decimal part to ensure integer
+
+# Unlink the pin from its signal
+halcmd unlinkp gladevcp.pass
+
+# Set the HAL pin value
+halcmd setp gladevcp.pass "$new_count"
+
+# Reconnect the pin to its signal
+halcmd net pass-sync gladevcp.pass
+
+# Update variables.txt
+sed -i "s/^pass=.*/pass=$new_count/" /home/cnc/linuxcnc/configs/xzacw/variables.txt
+
+#echo "M122: Updated pass to $new_count"
+exit 0
